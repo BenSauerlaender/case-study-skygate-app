@@ -6,9 +6,7 @@ import Header from "@/components/Header.vue";
 <template>
   <Header />
   <div id="content-frame">
-    <div id="content">
-      <RouterView />
-    </div>
+    <RouterView />
   </div>
 </template>
 
@@ -17,14 +15,12 @@ import Header from "@/components/Header.vue";
 #app {
   margin: 0 auto;
   font-weight: normal;
+  display: grid;
+  grid-template-columns: [start] auto [left-border] minmax(0px, 1280px) [right-border] auto [end];
 }
 
-#content {
-  max-width: 1280px;
-  padding: 2rem;
-}
 #content-frame {
-  display: flex;
-  place-items: center;
+  padding: 2rem;
+  grid-column: left-border / right-border;
 }
 </style>
