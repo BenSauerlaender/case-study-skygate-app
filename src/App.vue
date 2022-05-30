@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
+import Footer from "@/components/Footer.vue";
 import Header from "@/components/Header.vue";
 </script>
 
 <template>
   <Header />
-  <div id="content-frame">
+  <main>
     <RouterView />
-  </div>
+  </main>
+  <Footer />
 </template>
 
 <style>
@@ -17,9 +19,10 @@ import Header from "@/components/Header.vue";
   font-weight: normal;
   display: grid;
   grid-template-columns: [start] auto [left-border] minmax(0px, 1280px) [right-border] auto [end];
+  grid-template-rows: auto 1fr auto;
 }
 
-#content-frame {
+main {
   padding: 2rem;
   grid-column: left-border / right-border;
 }

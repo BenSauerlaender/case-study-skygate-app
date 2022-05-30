@@ -3,7 +3,7 @@
 <template>
   <header>
     <div id="content">
-      <h1 class="green">Case-Study-Skygate-App</h1>
+      <RouterLink to="/"><h1>Case-Study-Skygate-App</h1></RouterLink>
       <nav>
         <RouterLink to="/login">Login</RouterLink>
       </nav>
@@ -15,7 +15,6 @@
 header {
   width: 100%;
   background-color: var(--color-background-dark);
-  top: 0px;
   grid-column: start / end;
   display: grid;
   grid-template-columns: [start] auto [left-border] minmax(0px, 1280px) [right-border] auto [end];
@@ -52,5 +51,6 @@ h1 {
   font-weight: 500;
   font-size: 2.6rem;
   margin-top: auto;
+  color: var(--color-heading);
 }
 </style>
