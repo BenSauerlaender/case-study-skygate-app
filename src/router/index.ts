@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import PrivacyView from '../views/PrivacyView.vue'
 import TermsOfUseView from '../views/TermsOfUseView.vue'
+import NotFound from '../views/NotFoundView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,7 @@ const router = createRouter({
       name: 'terms-of-use',
       component: TermsOfUseView
     },
+    { path: '/404', alias: '/:pathMatch(.*)*', component: NotFound,}
   ]
 })
 
