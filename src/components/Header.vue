@@ -5,7 +5,7 @@
     <div id="content">
       <RouterLink to="/"><h1>Case-Study-Skygate-App</h1></RouterLink>
       <nav>
-        <RouterLink to="/login">Login</RouterLink>
+        <RouterLink to="/login">Anmelden</RouterLink>
       </nav>
     </div>
   </header>
