@@ -16,6 +16,7 @@ header {
   width: 100%;
   background-color: var(--color-background-dark);
   grid-column: start / end;
+  grid-row: 1 / 1;
   display: grid;
   grid-template-columns: [start] auto [left-border] minmax(0px, 1280px) [right-border] auto [end];
 }
