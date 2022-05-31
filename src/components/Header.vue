@@ -3,9 +3,11 @@
 <template>
   <header>
     <div id="content">
-      <RouterLink to="/"><h1>Case-Study-Skygate-App</h1></RouterLink>
+      <RouterLink to="/"
+        ><h1>{{ $t("app.name") }}</h1></RouterLink
+      >
       <nav>
-        <RouterLink to="/login">Anmelden</RouterLink>
+        <RouterLink to="/login">{{ $t("sites.login.name") }}</RouterLink>
       </nav>
     </div>
   </header>

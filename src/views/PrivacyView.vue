@@ -1,5 +1,5 @@
 <script setup lang="ts"></script>
 
 <template>
-  <h1 class="heading">Datenschutzerklärung</h1>
+  <h1 class="heading">{{ $t("sites.privacy.name") }}</h1>
 </template>

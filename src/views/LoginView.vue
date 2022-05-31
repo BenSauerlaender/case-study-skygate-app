@@ -8,18 +8,20 @@ function login(event: Event) {}
 </script>
 
 <template>
-  <h1 class="heading">Anmelden</h1>
-  <label for="email">Email: </label>
+  <h1 class="heading">{{ $t("sites.login.name") }}</h1>
+  <label for="email">{{ $t("inputFields.email.label") }}</label>
   <br />
   <input id="email" v-model="email" />
   <br />
-  <label for="password">Passwort: </label>
+  <label for="password">{{ $t("inputFields.password.label") }}</label>
   <br />
   <input id="password" v-model="password" />
   <br />
   <br />
-  <button @click="login">einloggen!</button>
+  <button @click="login">{{ $t("sites.login.buttons.login") }}</button>
   <br />
   <br />
-  <RouterLink to="/register">Noch keinen Account?</RouterLink>
+  <RouterLink to="/register">{{
+    $t("sites.login.links.noAccount")
+  }}</RouterLink>
 </template>

@@ -4,8 +4,10 @@
   <footer>
     <div id="content">
       <nav>
-        <RouterLink to="/privacy">Datenschutz</RouterLink>
-        <RouterLink to="/terms-of-use">Nutzungsbedingungen</RouterLink>
+        <RouterLink to="/privacy">{{ $t("sites.privacy.name") }}</RouterLink>
+        <RouterLink to="/terms-of-use">{{
+          $t("sites.termsOfUse.name")
+        }}</RouterLink>
       </nav>
     </div>
   </footer>

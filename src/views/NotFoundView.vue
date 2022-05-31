@@ -1,5 +1,5 @@
 <script setup lang="ts"></script>
 
 <template>
-  <h1 class="heading">Diese Seite existiert nicht :(</h1>
+  <h1 class="heading">{{ $t("sites.notFound.message") }}</h1>
 </template>

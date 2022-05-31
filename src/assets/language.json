@@ -1,0 +1,86 @@
+{
+    "de": {
+        "app": {
+            "name": "Case-Study-Sky-Gate"
+        },
+        "sites": {
+            "login": {
+                "name": "Anmelden",
+                "buttons": {
+                    "login": "einloggen!"
+                },
+                "links": {
+                    "noAccount": "Noch keinen Account?"
+                }
+            },
+            "register": {
+                "name": "Neuen Accaunt Erstellen",
+                "buttons": {
+                    "register": "registrieren!"
+                },
+                "links": {
+                    "alreadyRegistered": "Bereits registriert?"
+                }
+            },
+            "privacy": {
+                "name": "Datenschutz",
+                "long": "Datenschutzerklärung"
+            },
+            "termsOfUse": {
+                "name": "Nutzungsbedingungen"
+            },
+            "notFound": {
+                "message": "Diese Seite existiret nicht :("
+            }
+        },
+        "userProps": {
+            "email": {
+                "short": "E-mail",
+                "long": "@:{'userProps.email.short'}-Adresse"
+            },
+            "name": {
+                "short": "Name",
+                "long": "Vor- und Zuname"
+            },
+            "postcode": {
+                "short": "PLZ",
+                "long": "Postleitzahl"
+            },
+            "city": {
+                "short": "Ort"
+            },
+            "phone": {
+                "long": "Telefonnummer"
+            },
+            "password": {
+                "short": "Passwort"
+            }
+        },
+        "inputFields": {
+            "email": {
+                "label": "@:{'userProps.email.long'}:"
+            },
+            "name": {
+                "label": "@:{'userProps.name.long'}:"
+            },
+            "postcode": {
+                "label": "@:{'userProps.postcode.long'}:"
+            },
+            "city": {
+                "label": "@:{'userProps.city.short'}:"
+            },
+            "phone": {
+                "label": "@:{'userProps.phone.long'}:"
+            },
+            "password": {
+                "label": "@:{'userProps.password.short'}:"
+            },
+            "passwordRepeat": {
+                "label": "@:userProps.password.short wiederholen:"
+            },
+            "readLegals": {
+                "label": "Ich stimme den {termsOfUse} zu und habe die {privacy} gelesen."
+            }
+        }
+    }
+}
