@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { reactive } from "vue";
+import { ref, type Ref } from "vue";
 import useVuelidate from "@vuelidate/core";
-import { required, email, alpha, integer, sameAs } from "@vuelidate/validators";
+import { required } from "@/helper/validation";
 
 /**
- * Information the user inserts to register
+ * Information the user inserts to the register form
  */
-const info = reactive({
+const input = ref({
   email: "",
   name: "",
   postcode: "",
@@ -20,76 +20,78 @@ const info = reactive({
 /**
  * Validation rules that need to match to register
  */
-const rules = {
-  email: { required, email },
-  name: { required, alpha },
-  postcode: { required, integer },
-  city: { required, alpha },
+const validationRules = {
+  email: { required },
+  name: { required },
+  postcode: { required },
+  city: { required },
   phone: { required },
   password: { required },
-  passwordRepeat: { required, isSame: sameAs(info.password) },
-  readLegals: { required, isChecked: sameAs(true) },
+  passwordRepeat: { required },
+  readLegals: { required },
 };
 
-/**
- * The Vuelidation object
- */
-const v$ = useVuelidate(rules, info);
+const validationErrors: Ref<Map<string, string[]>> = ref(new Map());
 
+/**
+ * The Vuelidation object to validate the input
+ */
+const v$ = useVuelidate(validationRules, input);
+
+/**
+ * Event to register the new user (invoked by user-button-click)
+ */
 const register = async (event: Event) => {
+  //validate the input
   const result = await v$.value.$validate();
   if (!result) {
-    v$.value.$errors.forEach((element) => {});
+    v$.value.$errors.forEach((error) => {
+      validationErrors.value.set(error.$property);
+    });
     return;
   }
 };
 </script>
 
 <template>
-  <label for="email">Email: </label>
-  <br />
-  <input id="email" v-model="info.email" />
+  <div v-for="(value, key) of input">
+    <!-- Special case for the checkbox -->
+    <template v-if="key === 'readLegals'">
+      <br />
+      <input type="checkbox" id="{{key}}" v-model="input.readLegals" />
+      <label for="{{key}}">
+        <i18n-t keypath="inputFields.readLegals.label" tag="i">
+          <template v-slot:termsOfUse>
+            <RouterLink to="/terms-of-use">{{
+              $t("sites.termsOfUse.name")
+            }}</RouterLink>
+          </template>
+          <template v-slot:privacy>
+            <RouterLink to="/privacy">{{
+              $t("sites.privacy.long")
+            }}</RouterLink>
+          </template>
+        </i18n-t>
+      </label>
+    </template>
+    <!-- Normal behavior on text-input-fields -->
+    <template v-else>
+      <!-- Label for field -->
+      <label for="{{key}}">{{ $t("inputFields." + key + ".label") }}</label>
+      <br />
+      <!-- For the Password fields -->
+      <template v-if="key === 'password' || key === 'passwordRepeat'">
+        <input type="password" id="{{key}}" v-model="input[key]" />
+      </template>
+      <!-- For all other fields -->
+      <template v-else>
+        <input id="{{key}}" v-model="input[key]" />
+      </template>
+      <br
+    /></template>
+  </div>
+
   <br />
 
-  <label for="name">Name: </label>
-  <br />
-  <input id="name" v-model="info.name" />
-  <br />
-
-  <label for="postcode">PLZ: </label>
-  <br />
-  <input id="postcode" v-model="info.postcode" />
-  <br />
-
-  <label for="city">Ort: </label>
-  <br />
-  <input id="city" v-model="info.city" />
-  <br />
-
-  <label for="phone">Telefonnummer: </label>
-  <br />
-  <input id="phone" v-model="info.phone" />
-  <br />
-
-  <label for="password">Passwort: </label>
-  <br />
-  <input type="password" id="password" v-model="info.password" />
-  <br />
-
-  <label for="password-repeat">Passwort wiederholen: </label>
-  <br />
-  <input type="password" id="password-repeat" v-model="info.passwordRepeat" />
-  <br />
-  <br />
-
-  <input type="checkbox" id="readLegals" v-model="info.readLegals" />
-  <label for="readLegals">
-    Ich stimme den
-    <RouterLink to="/terms-of-use">Nutzungsbedingungen</RouterLink> zu und habe
-    die
-    <RouterLink to="/privacy">Datenschutzerklärung</RouterLink> gelesen.</label
-  >
-  <br />
-
-  <button @click="register">registrieren!</button>
+  <button @click="register">{{ $t("sites.register.buttons.register") }}</button>
 </template>
