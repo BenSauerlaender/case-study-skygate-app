@@ -79,8 +79,13 @@
                 "label": "@:userProps.password.short wiederholen:"
             },
             "readLegals": {
-                "label": "Ich stimme den {termsOfUse} zu und habe die {privacy} gelesen."
+                "label": "@:sites.termsOfUse.name und @:sites.privacy.long",
+                "description": "Ich stimme den {termsOfUse} zu und habe die {privacy} gelesen."
             }
+        },
+        "validationErrorMessages": {
+            "required": "Muss angegeben werden!",
+            "needCheck": "Muss bestätigt werden!"
         }
     }
 }

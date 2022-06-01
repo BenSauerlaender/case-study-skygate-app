@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import ErrorLog from "@/components/ErrorLog.vue";
 import { ref, type Ref } from "vue";
 import useVuelidate from "@vuelidate/core";
-import { required } from "@/helper/validation";
+import { required, isChecked } from "@/helper/validators";
 
 /**
  * Information the user inserts to the register form
@@ -28,10 +29,15 @@ const validationRules = {
   phone: { required },
   password: { required },
   passwordRepeat: { required },
-  readLegals: { required },
+  readLegals: { required, isChecked },
 };
 
-const validationErrors: Ref<Map<string, string[]>> = ref(new Map());
+/**
+ * A map that holds for each input-field a list of errorMessages.
+ *
+ * The errorMessages are path to the i18n messages to show the user
+ */
+const validationErrorMessageMap: Ref<Map<string, string[]>> = ref(new Map());
 
 /**
  * The Vuelidation object to validate the input
@@ -45,8 +51,17 @@ const register = async (event: Event) => {
   //validate the input
   const result = await v$.value.$validate();
   if (!result) {
+    //write all validation errors in validationErrorMessageMap
+    validationErrorMessageMap.value = new Map();
     v$.value.$errors.forEach((error) => {
-      validationErrors.value.set(error.$property);
+      let errorList =
+        validationErrorMessageMap.value.get(error.$property) ?? [];
+      errorList.push(
+        typeof error.$message === "string"
+          ? error.$message
+          : error.$message.value
+      );
+      validationErrorMessageMap.value.set(error.$property, errorList);
     });
     return;
   }
@@ -54,44 +69,80 @@ const register = async (event: Event) => {
 </script>
 
 <template>
-  <div v-for="(value, key) of input">
-    <!-- Special case for the checkbox -->
-    <template v-if="key === 'readLegals'">
-      <br />
-      <input type="checkbox" id="{{key}}" v-model="input.readLegals" />
-      <label for="{{key}}">
-        <i18n-t keypath="inputFields.readLegals.label" tag="i">
-          <template v-slot:termsOfUse>
-            <RouterLink to="/terms-of-use">{{
-              $t("sites.termsOfUse.name")
-            }}</RouterLink>
+  <div id="frame">
+    <div id="inputs">
+      <div v-for="(value, key) of input">
+        <!-- Special case for the checkbox -->
+        <template v-if="key === 'readLegals'">
+          <br />
+          <input
+            type="checkbox"
+            id="{{key}}"
+            v-model="input.readLegals"
+            :class="{ invalid: validationErrorMessageMap.has(key) }"
+          />
+          <label for="{{key}}">
+            <i18n-t keypath="inputFields.readLegals.description" tag="i">
+              <template v-slot:termsOfUse>
+                <RouterLink to="/terms-of-use">{{
+                  $t("sites.termsOfUse.name")
+                }}</RouterLink>
+              </template>
+              <template v-slot:privacy>
+                <RouterLink to="/privacy">{{
+                  $t("sites.privacy.long")
+                }}</RouterLink>
+              </template>
+            </i18n-t>
+          </label>
+        </template>
+        <!-- Normal behavior on text-input-fields -->
+        <template v-else>
+          <!-- Label for field -->
+          <label for="{{key}}">{{ $t("inputFields." + key + ".label") }}</label>
+          <br />
+          <!-- For the Password fields -->
+          <template v-if="key === 'password' || key === 'passwordRepeat'">
+            <input
+              type="password"
+              id="{{key}}"
+              v-model="input[key]"
+              :class="{ invalid: validationErrorMessageMap.has(key) }"
+            />
           </template>
-          <template v-slot:privacy>
-            <RouterLink to="/privacy">{{
-              $t("sites.privacy.long")
-            }}</RouterLink>
+          <!-- For all other fields -->
+          <template v-else>
+            <input
+              id="{{key}}"
+              v-model="input[key]"
+              :class="{ invalid: validationErrorMessageMap.has(key) }"
+            />
           </template>
-        </i18n-t>
-      </label>
-    </template>
-    <!-- Normal behavior on text-input-fields -->
-    <template v-else>
-      <!-- Label for field -->
-      <label for="{{key}}">{{ $t("inputFields." + key + ".label") }}</label>
-      <br />
-      <!-- For the Password fields -->
-      <template v-if="key === 'password' || key === 'passwordRepeat'">
-        <input type="password" id="{{key}}" v-model="input[key]" />
-      </template>
-      <!-- For all other fields -->
-      <template v-else>
-        <input id="{{key}}" v-model="input[key]" />
-      </template>
-      <br
-    /></template>
+          <br
+        /></template>
+      </div>
+    </div>
+    <ErrorLog
+      v-if="validationErrorMessageMap.size > 0"
+      :errorMap="validationErrorMessageMap"
+    />
   </div>
 
-  <br />
-
   <button @click="register">{{ $t("sites.register.buttons.register") }}</button>
+  <br />
 </template>
+
+<style scoped>
+.invalid {
+  outline: solid var(--color-invalid-input);
+}
+
+/* To add space between checkbox and text*/
+input {
+  margin-right: 10px;
+}
+#frame {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+</style>
