@@ -14,7 +14,7 @@
                 }
             },
             "register": {
-                "name": "Neuen Accaunt Erstellen",
+                "name": "Neuen Account Erstellen",
                 "buttons": {
                     "register": "registrieren!"
                 },
