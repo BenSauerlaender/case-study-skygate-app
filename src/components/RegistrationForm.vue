@@ -3,6 +3,10 @@ import ErrorLog from "@/components/ErrorLog.vue";
 import { computed, ref, type Ref } from "vue";
 import useVuelidate from "@vuelidate/core";
 import {
+  register as apiRegister,
+  type RegistrationErrorType,
+} from "@/helper/backendInterface";
+import {
   required,
   isChecked,
   isEmail,
@@ -72,15 +76,18 @@ const validationErrorMessageMap: Ref<Map<string, string[]>> = ref(new Map());
  */
 const v$ = useVuelidate(validationRules, input);
 
+const apiResponseStatus: Ref<string | null> = ref(null);
 /**
  * Event to register the new user (invoked by user-button-click)
  */
 const register = async (event: Event) => {
+  if (apiResponseStatus.value === "pending") return;
+
+  validationErrorMessageMap.value = new Map();
   //validate the input
   const result = await v$.value.$validate();
   if (!result) {
     //write all validation errors in validationErrorMessageMap
-    validationErrorMessageMap.value = new Map();
     v$.value.$errors.forEach((error) => {
       let errorList =
         validationErrorMessageMap.value.get(error.$property) ?? [];
@@ -93,7 +100,27 @@ const register = async (event: Event) => {
     });
     return;
   }
-  validationErrorMessageMap.value = new Map();
+  apiResponseStatus.value = "pending";
+  apiRegister(input.value, (success: boolean, error: RegistrationErrorType) => {
+    if (success === true) {
+      apiResponseStatus.value = "successful";
+    } else if (error === null || error === "noResponse") {
+      apiResponseStatus.value = "error";
+    } else {
+      apiResponseStatus.value = null;
+      Object.keys(error).forEach((key: string) => {
+        if (key === "email" && error[key][0] === "IS_TAKEN") {
+          validationErrorMessageMap.value.set("email", [
+            "validationErrorMessages.isTaken",
+          ]);
+        } else {
+          validationErrorMessageMap.value.set(key, [
+            "validationErrorMessages.needToBeValid",
+          ]);
+        }
+      });
+    }
+  });
 };
 </script>
 

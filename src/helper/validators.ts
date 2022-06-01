@@ -58,7 +58,7 @@ export const isChecked: ValidationRule<any> = helpers.withMessage(
 );
 
 export const isEmail: ValidationRule<any> = helpers.withMessage(
-  i18n_prefix + "needValid",
+  i18n_prefix + "needToBeValid",
   email
 );
 

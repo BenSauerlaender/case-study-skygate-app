@@ -114,7 +114,7 @@
             },
             "needMatch": "Muss übereinstimmen.",
             "needCheck": "Muss bestätigt werden!",
-            "needValid": "Muss gültig sein",
+            "needToBeValid": "Muss gültig sein",
             "needToBeNumber": "Darf ausschließlich Ziffern enthalten",
             "needToBeWords": "Darf ausschließlich Buchstaben und Leerzeichen enthalten",
             "needToBePhone": "Darf ausschließlich Ziffern und folgende Sonderzeichen (+-()/.x) enthalten",
