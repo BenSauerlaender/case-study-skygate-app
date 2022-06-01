@@ -85,7 +85,43 @@
         },
         "validationErrorMessages": {
             "required": "Muss angegeben werden!",
-            "needCheck": "Muss bestätigt werden!"
+            "maxSize": {
+                "_pre": "Darf maximal",
+                "_post": "Zeichen lang sein.",
+                "99": "@:validationErrorMessages.maxSize._pre 99 @:validationErrorMessages.maxSize._post",
+                "49": "@:validationErrorMessages.maxSize._pre 49 @:validationErrorMessages.maxSize._post"
+            },
+            "minSize": {
+                "_pre": "Muss mindestens",
+                "_post": "@:validationErrorMessages.maxSize._post",
+                "2": "@:validationErrorMessages.minSize._pre 2 @:validationErrorMessages.minSize._post",
+                "8": "@:validationErrorMessages.minSize._pre 8 @:validationErrorMessages.minSize._post"
+            },
+            "size": {
+                "_pre": "Muss genau",
+                "_post": "@:validationErrorMessages.maxSize._post",
+                "5": "@:validationErrorMessages.size._pre 5 @:validationErrorMessages.size._post"
+            },
+            "maxDigit": {
+                "_pre": "Darf maximal",
+                "_post": "Ziffern lang sein.",
+                "15": "@:validationErrorMessages.maxDigit._pre 15 @:validationErrorMessages.maxDigit._post"
+            },
+            "minDigit": {
+                "_pre": "Muss mindestens",
+                "_post": "@:validationErrorMessages.maxDigit._post",
+                "8": "@:validationErrorMessages.minDigit._pre 8 @:validationErrorMessages.minDigit._post"
+            },
+            "needMatch": "Muss übereinstimmen.",
+            "needCheck": "Muss bestätigt werden!",
+            "needValid": "Muss gültig sein",
+            "needToBeNumber": "Darf ausschließlich Ziffern enthalten",
+            "needToBeWords": "Darf ausschließlich Buchstaben und Leerzeichen enthalten",
+            "needToBePhone": "Darf ausschließlich Ziffern und folgende Sonderzeichen (+-()/.x) enthalten",
+            "needToBePassword": "Darf ausschließlich Buchstaben, Ziffern und folgende Sonderzeichen (#?!@$%^&.*-+) enthalten",
+            "containOneNumber": "Muss mindestens eine Ziffer enthalten",
+            "containOneUpper": "Muss mindestens einen Großbuchstaben enthalten",
+            "containOneLower": "Muss mindestens einen Kleinbuchstaben enthalten"
         }
     }
 }

@@ -1,8 +1,25 @@
 <script setup lang="ts">
 import ErrorLog from "@/components/ErrorLog.vue";
-import { ref, type Ref } from "vue";
+import { computed, ref, type Ref } from "vue";
 import useVuelidate from "@vuelidate/core";
-import { required, isChecked } from "@/helper/validators";
+import {
+  required,
+  isChecked,
+  isEmail,
+  maxSize,
+  minSize,
+  maxDigit,
+  minDigit,
+  isWords,
+  isNumber,
+  size,
+  equals,
+  isPhone,
+  isPassword,
+  containOneNumber,
+  containOneUpper,
+  containOneLower,
+} from "@/helper/validators";
 
 /**
  * Information the user inserts to the register form
@@ -17,18 +34,29 @@ const input = ref({
   passwordRepeat: "",
   readLegals: false,
 });
-
+//need a separate computed property for the validation
+const password = computed(() => {
+  return input.value.password;
+});
 /**
  * Validation rules that need to match to register
  */
 const validationRules = {
-  email: { required },
-  name: { required },
-  postcode: { required },
-  city: { required },
-  phone: { required },
-  password: { required },
-  passwordRepeat: { required },
+  email: { required, isEmail, maxChars: maxSize(99) },
+  name: { required, isWords, minChars: minSize(2) },
+  postcode: { required, isNumber, chars: size(5) },
+  city: { required, isWords, minChars: minSize(2) },
+  phone: { required, isPhone, minDigit: minDigit(8), maxDigit: maxDigit(15) },
+  password: {
+    required,
+    minChars: minSize(8),
+    maxChars: maxSize(49),
+    isPassword,
+    containOneNumber,
+    containOneUpper,
+    containOneLower,
+  },
+  passwordRepeat: { required, equals: equals(password) },
   readLegals: { required, isChecked },
 };
 
@@ -65,6 +93,7 @@ const register = async (event: Event) => {
     });
     return;
   }
+  validationErrorMessageMap.value = new Map();
 };
 </script>
 
