@@ -7,7 +7,6 @@ import Form from "@/components/RegistrationForm.vue";
 
   <Form />
   <br />
-  <br />
 
   <RouterLink to="/login">{{
     $t("sites.register.links.alreadyRegistered")

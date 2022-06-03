@@ -11,6 +11,10 @@
                 },
                 "links": {
                     "noAccount": "Noch keinen Account?"
+                },
+                "messages": {
+                    "noUser": "Es konnte kein Nutzer mit dieser @:{'userProps.email.long'} gefunden werden",
+                    "wrongPassword": "Das @:{'userProps.password.short'} stimmt nicht mit der @:{'userProps.email.long'} überein.."
                 }
             },
             "register": {
@@ -20,6 +24,9 @@
                 },
                 "links": {
                     "alreadyRegistered": "Bereits registriert?"
+                },
+                "messages": {
+                    "successful": "Bitte überprüfe deine @:{'userProps.email.short'}s ({email}). Und Klicke auf den Bestätigungslink."
                 }
             },
             "privacy": {
@@ -121,7 +128,12 @@
             "needToBePassword": "Darf ausschließlich Buchstaben, Ziffern und folgende Sonderzeichen (#?!@$%^&.*-+) enthalten",
             "containOneNumber": "Muss mindestens eine Ziffer enthalten",
             "containOneUpper": "Muss mindestens einen Großbuchstaben enthalten",
-            "containOneLower": "Muss mindestens einen Kleinbuchstaben enthalten"
+            "containOneLower": "Muss mindestens einen Kleinbuchstaben enthalten",
+            "isTaken": "Ist bereits vergeben"
+        },
+        "messages": {
+            "loading": "loading...",
+            "connectionError": "Es gibt ein Problem mit der Server-verbindung. Bitte versuche es später erneut!"
         }
     }
 }

@@ -5,6 +5,9 @@ import languageMessages from "./assets/language.json";
 
 import App from "./App.vue";
 import router from "./router";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 const i18n = createI18n({
   legacy: false, // you must set `false`, to use Composition API

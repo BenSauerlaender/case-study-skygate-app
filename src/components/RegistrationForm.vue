@@ -3,10 +3,6 @@ import ErrorLog from "@/components/ErrorLog.vue";
 import { computed, ref, type Ref } from "vue";
 import useVuelidate from "@vuelidate/core";
 import {
-  register as apiRegister,
-  type RegistrationErrorType,
-} from "@/helper/backendInterface";
-import {
   required,
   isChecked,
   isEmail,
@@ -24,11 +20,17 @@ import {
   containOneUpper,
   containOneLower,
 } from "@/helper/validators";
+import { useStore } from "@/stores/store";
+import { InvalidPropsError } from "@/helper/errors";
+import type { RegistrationProps } from "@/helper/backendInterface";
 
-/**
- * Information the user inserts to the register form
- */
-const input = ref({
+const store = useStore();
+
+type FormPropsType = RegistrationProps & {
+  passwordRepeat: string;
+  readLegals: boolean;
+};
+const initialProps: FormPropsType = {
   email: "",
   name: "",
   postcode: "",
@@ -37,10 +39,23 @@ const input = ref({
   password: "",
   passwordRepeat: "",
   readLegals: false,
+};
+/**
+ * Information the user inserts to the register form
+ */
+const formProps: Ref<FormPropsType> = ref({ ...initialProps });
+
+const emailSendTo = ref("");
+
+function resetFormProps() {
+  Object.assign(formProps, initialProps);
+}
+const formPropKeys = computed(() => {
+  return Object.keys(formProps);
 });
 //need a separate computed property for the validation
 const password = computed(() => {
-  return input.value.password;
+  return formProps.value.password;
 });
 /**
  * Validation rules that need to match to register
@@ -74,9 +89,10 @@ const validationErrorMessageMap: Ref<Map<string, string[]>> = ref(new Map());
 /**
  * The Vuelidation object to validate the input
  */
-const v$ = useVuelidate(validationRules, input);
+const v$ = useVuelidate(validationRules, formProps);
 
-const apiResponseStatus: Ref<string | null> = ref(null);
+const apiResponseStatus: Ref<"pending" | "successful" | "error" | null> =
+  ref(null);
 /**
  * Event to register the new user (invoked by user-button-click)
  */
@@ -101,40 +117,50 @@ const register = async (event: Event) => {
     return;
   }
   apiResponseStatus.value = "pending";
-  apiRegister(input.value, (success: boolean, error: RegistrationErrorType) => {
-    if (success === true) {
+
+  store
+    .registerUser(formProps.value)
+    .then(() => {
       apiResponseStatus.value = "successful";
-    } else if (error === null || error === "noResponse") {
-      apiResponseStatus.value = "error";
-    } else {
-      apiResponseStatus.value = null;
-      Object.keys(error).forEach((key: string) => {
-        if (key === "email" && error[key][0] === "IS_TAKEN") {
-          validationErrorMessageMap.value.set("email", [
-            "validationErrorMessages.isTaken",
-          ]);
-        } else {
-          validationErrorMessageMap.value.set(key, [
-            "validationErrorMessages.needToBeValid",
-          ]);
-        }
-      });
-    }
-  });
+      emailSendTo.value = formProps.value.email;
+      resetFormProps();
+    })
+    .catch((err) => {
+      if (err instanceof InvalidPropsError) {
+        apiResponseStatus.value = null;
+
+        const invalidPropMap = err.invalidProps;
+
+        Object.keys(invalidPropMap).forEach((key: string) => {
+          if (key === "email" && invalidPropMap[key][0] === "IS_TAKEN") {
+            validationErrorMessageMap.value.set("email", [
+              "validationErrorMessages.isTaken",
+            ]);
+          } else {
+            validationErrorMessageMap.value.set(key, [
+              "validationErrorMessages.needToBeValid",
+            ]);
+          }
+        });
+      } else {
+        apiResponseStatus.value = "error";
+        resetFormProps();
+      }
+    });
 };
 </script>
 
 <template>
   <div id="frame">
     <div id="inputs">
-      <div v-for="(value, key) of input">
+      <div v-for="(value, key) in formProps">
         <!-- Special case for the checkbox -->
         <template v-if="key === 'readLegals'">
           <br />
           <input
             type="checkbox"
             id="{{key}}"
-            v-model="input.readLegals"
+            v-model="formProps.readLegals"
             :class="{ invalid: validationErrorMessageMap.has(key) }"
           />
           <label for="{{key}}">
@@ -162,7 +188,7 @@ const register = async (event: Event) => {
             <input
               type="password"
               id="{{key}}"
-              v-model="input[key]"
+              v-model="formProps[key]"
               :class="{ invalid: validationErrorMessageMap.has(key) }"
             />
           </template>
@@ -170,7 +196,7 @@ const register = async (event: Event) => {
           <template v-else>
             <input
               id="{{key}}"
-              v-model="input[key]"
+              v-model="formProps[key]"
               :class="{ invalid: validationErrorMessageMap.has(key) }"
             />
           </template>
@@ -186,6 +212,18 @@ const register = async (event: Event) => {
 
   <button @click="register">{{ $t("sites.register.buttons.register") }}</button>
   <br />
+  <br />
+  <div v-if="apiResponseStatus === 'pending'">
+    <h3>{{ $t("messages.loading") }}</h3>
+  </div>
+  <div id="success" v-if="apiResponseStatus === 'successful'">
+    <h3>
+      {{ $t("sites.register.messages.successful", { email: emailSendTo }) }}
+    </h3>
+  </div>
+  <div id="error" v-if="apiResponseStatus === 'error'">
+    <h3>{{ $t("messages.connectionError") }}</h3>
+  </div>
 </template>
 
 <style scoped>
@@ -200,5 +238,11 @@ input {
 #frame {
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+#success {
+  color: var(--color-success);
+}
+#error {
+  color: var(--color-error);
 }
 </style>
