@@ -6,6 +6,7 @@ import languageMessages from "./assets/language.json";
 import App from "./App.vue";
 import router from "./router";
 import axios from "axios";
+import { useStore } from "./stores/store";
 
 axios.defaults.withCredentials = true;
 
@@ -17,8 +18,12 @@ const i18n = createI18n({
 });
 
 const app = createApp(App);
+const pinia = createPinia();
+app.use(pinia);
 
-app.use(createPinia());
+const store = useStore();
+store.loginSilently();
+
 app.use(router);
 app.use(i18n);
 

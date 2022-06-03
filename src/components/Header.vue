@@ -1,4 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useStore } from "@/stores/store";
+import { storeToRefs } from "pinia";
+
+const store = useStore();
+
+const { loggedIn } = storeToRefs(store);
+</script>
 
 <template>
   <header>
@@ -6,7 +13,10 @@
       <RouterLink to="/"
         ><h1>{{ $t("app.name") }}</h1></RouterLink
       >
-      <nav>
+      <nav v-if="loggedIn === true">
+        <RouterLink to="/profile">{{ $t("sites.profile.name") }}</RouterLink>
+      </nav>
+      <nav v-else>
         <RouterLink to="/login">{{ $t("sites.login.name") }}</RouterLink>
       </nav>
     </div>

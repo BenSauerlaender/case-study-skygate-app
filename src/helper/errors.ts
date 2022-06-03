@@ -9,11 +9,14 @@ export class ConnectionError extends Error {
 
 export class InvalidPropsError extends Error {
   invalidProps: { [index: string]: Array<string> };
-  constructor(msg: string = "", props: { [index: string]: Array<string> }) {
+  constructor(
+    msg: string = "",
+    props: { [index: string]: Array<string> } = {}
+  ) {
     super(msg);
 
     // Set the prototype explicitly.
-    Object.setPrototypeOf(this, ConnectionError.prototype);
+    Object.setPrototypeOf(this, InvalidPropsError.prototype);
 
     this.invalidProps = props;
   }

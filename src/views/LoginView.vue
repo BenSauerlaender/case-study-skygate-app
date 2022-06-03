@@ -1,56 +1,31 @@
 <script setup lang="ts">
-import router from "@/router";
-import { ref, type Ref } from "vue";
-import { sendLogin, type LoginErrorType } from "@/helper/backendInterface";
+import Form from "@/components/LoginForm.vue";
+import { useStore } from "@/stores/store";
+import { storeToRefs } from "pinia";
 
-const email = ref("");
-const password = ref("");
+const store = useStore();
 
-const error: Ref<LoginErrorType> = ref("");
+const { loggedIn } = storeToRefs(store);
 
-function login(event: Event) {
-  sendLogin(
-    email.value,
-    password.value,
-    (success: boolean, err: LoginErrorType) => {
-      if (success) {
-        router.push("/profile");
-      } else {
-        error.value = err;
-      }
-    }
-  );
+function logout(event: Event) {
+  store.logoutUser();
 }
 </script>
 
 <template>
   <h1 class="heading">{{ $t("sites.login.name") }}</h1>
-  <label for="email">{{ $t("inputFields.email.label") }}</label>
   <br />
-  <input id="email" v-model="email" />
-  <br />
-  <label for="password">{{ $t("inputFields.password.label") }}</label>
-  <br />
-  <input type="password" id="password" v-model="password" />
-  <br />
-  <br />
-  <button @click="login">{{ $t("sites.login.buttons.login") }}</button>
-  <br />
-  <div id="error">
-    <h3 v-if="error === 'noUser'">
-      {{ $t("sites.login.messages.noUser") }}
-    </h3>
-    <h3 v-if="error === 'wrongPassword'">
-      {{ $t("sites.login.messages.wrongPassword") }}
-    </h3>
-    <h3 v-if="error === 'noResponse'">
-      {{ $t("messages.connectionError") }}
-    </h3>
+  <div v-if="loggedIn === false">
+    <Form />
+    <br />
+    <RouterLink to="/register">{{
+      $t("sites.login.links.noAccount")
+    }}</RouterLink>
   </div>
-  <br />
-  <RouterLink to="/register">{{
-    $t("sites.login.links.noAccount")
-  }}</RouterLink>
+  <div v-else>
+    <h3>{{ $t("sites.login.messages.alreadyLoggedIn") }}</h3>
+    <button @click="logout">{{ $t("sites.login.buttons.logout") }}</button>
+  </div>
 </template>
 <style scoped>
 #error {

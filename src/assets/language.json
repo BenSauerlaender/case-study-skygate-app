@@ -7,14 +7,16 @@
             "login": {
                 "name": "Anmelden",
                 "buttons": {
-                    "login": "einloggen!"
+                    "login": "einloggen!",
+                    "logout": "ausloggen!"
                 },
                 "links": {
                     "noAccount": "Noch keinen Account?"
                 },
                 "messages": {
                     "noUser": "Es konnte kein Nutzer mit dieser @:{'userProps.email.long'} gefunden werden",
-                    "wrongPassword": "Das @:{'userProps.password.short'} stimmt nicht mit der @:{'userProps.email.long'} überein.."
+                    "wrongPassword": "Das @:{'userProps.password.short'} stimmt nicht mit der @:{'userProps.email.long'} überein..",
+                    "alreadyLoggedIn": "Du bist bereits eingelogged."
                 }
             },
             "register": {
@@ -28,6 +30,9 @@
                 "messages": {
                     "successful": "Bitte überprüfe deine @:{'userProps.email.short'}s ({email}). Und Klicke auf den Bestätigungslink."
                 }
+            },
+            "profile": {
+                "name": "Mein Profil"
             },
             "privacy": {
                 "name": "Datenschutz",

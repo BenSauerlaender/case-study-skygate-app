@@ -22,7 +22,7 @@ import {
 } from "@/helper/validators";
 import { useStore } from "@/stores/store";
 import { InvalidPropsError } from "@/helper/errors";
-import type { RegistrationProps } from "@/helper/backendInterface";
+import type { RegistrationProps } from "@/helper/apiCalls";
 
 const store = useStore();
 
@@ -126,6 +126,7 @@ const register = async (event: Event) => {
       resetFormProps();
     })
     .catch((err) => {
+      console.log(err);
       if (err instanceof InvalidPropsError) {
         apiResponseStatus.value = null;
 
