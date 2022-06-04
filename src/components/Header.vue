@@ -1,19 +1,25 @@
 <script setup lang="ts">
 import { useStore } from "@/stores/store";
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
 const store = useStore();
 
 const { loggedIn } = storeToRefs(store);
+
+const logoLink = computed(() => {
+  return loggedIn ? "/profile" : "/";
+});
 </script>
 
 <template>
   <header>
     <div id="content">
-      <RouterLink to="/"
+      <RouterLink :to="logoLink"
         ><h1>{{ $t("app.name") }}</h1></RouterLink
       >
       <nav v-if="loggedIn === true">
+        <RouterLink to="/search">{{ $t("sites.search.name") }}</RouterLink>
         <RouterLink to="/profile">{{ $t("sites.profile.name") }}</RouterLink>
       </nav>
       <nav v-else>

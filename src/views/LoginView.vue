@@ -2,9 +2,9 @@
 import Form from "@/components/LoginForm.vue";
 import { useStore } from "@/stores/store";
 import { storeToRefs } from "pinia";
+import { ref } from "vue";
 
 const store = useStore();
-
 const { loggedIn } = storeToRefs(store);
 
 function logout(event: Event) {
@@ -22,7 +22,7 @@ function logout(event: Event) {
       $t("sites.login.links.noAccount")
     }}</RouterLink>
   </div>
-  <div v-else>
+  <div v-else-if="loggedIn === true">
     <h3>{{ $t("sites.login.messages.alreadyLoggedIn") }}</h3>
     <button @click="logout">{{ $t("sites.login.buttons.logout") }}</button>
   </div>

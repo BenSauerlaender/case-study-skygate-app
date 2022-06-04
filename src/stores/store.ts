@@ -4,12 +4,13 @@ import { api, type RegistrationProps } from "@/helper/apiCalls";
 export const useStore = defineStore({
   id: "store",
   state: () => ({
-    accessToken: null as null | string,
+    accessToken: undefined as null | undefined | string,
     accessTokenAutoRefreshTimeout: null as null | number,
     user: null,
   }),
   getters: {
-    loggedIn(): boolean {
+    loggedIn(): boolean | undefined {
+      if (this.accessToken === undefined) return undefined;
       return this.accessToken !== null;
     },
     accessTokenPayload(): { id: number; exp: number } | undefined {
@@ -37,13 +38,17 @@ export const useStore = defineStore({
     },
 
     async loginSilently(): Promise<void> {
-      if (this.loggedIn) throw new Error("alreadyLoggedIn");
+      if (this.loggedIn === true) throw new Error("alreadyLoggedIn");
       await this.fetchAccessToken();
     },
 
     async fetchAccessToken(): Promise<void> {
-      this.accessToken = await api.getToken();
-      this.autoRefreshAccessToken();
+      try {
+        this.accessToken = await api.getToken();
+        this.autoRefreshAccessToken();
+      } catch {
+        this.accessToken = null;
+      }
     },
 
     autoRefreshAccessToken(): void {

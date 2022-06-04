@@ -6,6 +6,7 @@ import TermsOfUseView from "../views/TermsOfUseView.vue";
 import NotFound from "../views/NotFoundView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import SearchView from "../views/SearchView.vue";
+import { useStore } from "@/stores/store";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,12 +39,34 @@ const router = createRouter({
       component: TermsOfUseView,
     },
     {
+      path: "/search",
+      name: "search",
+      component: SearchView,
+      meta: {
+        requiresLogin: true,
+      },
+    },
+    {
       path: "/profile",
       name: "profile",
       component: ProfileView,
+      meta: {
+        requiresLogin: true,
+      },
     },
     { path: "/404", alias: "/:pathMatch(.*)*", component: NotFound },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresLogin)) {
+    const store = useStore();
+    if (!store.loggedIn) {
+      next("/login");
+      return;
+    }
+  }
+  next();
 });
 
 export default router;
