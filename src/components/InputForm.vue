@@ -3,6 +3,7 @@ import ErrorLog from "@/components/ErrorLog.vue";
 import InputFields from "./InputFields.vue";
 import type { ApiResponseStatus, FormInputs } from "@/helper/types";
 import { computed, ref, type Ref } from "vue";
+import { getValidators } from "@/helper/validators";
 
 const props = defineProps<{
   fields: Array<keyof FormInputs>;
@@ -48,15 +49,17 @@ const getInputs = async (inputs: FormInputs) => {
   //validate each field
   props.fields.forEach((field) => {
     //check each validator
-    validations[field].forEach((validator) => {
-      const valid = validator(inputs[field]);
-      //if validation fails
-      if (valid !== true) {
-        //add message to validationErrorMessageMap
-        const messages = validationErrorMessageMap.value.get(field) ?? [];
-        validationErrorMessageMap.value.set(field, [...messages, valid]);
-      }
-    });
+    getValidators(inputs["password"] ?? "")
+      .get(field)!
+      .forEach((validator) => {
+        const valid = validator(inputs[field]);
+        //if validation fails
+        if (valid !== true) {
+          //add message to validationErrorMessageMap
+          const messages = validationErrorMessageMap.value.get(field) ?? [];
+          validationErrorMessageMap.value.set(field, [...messages, valid]);
+        }
+      });
   });
 
   //if evrything is valid send to parent
