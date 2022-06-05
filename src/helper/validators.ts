@@ -7,6 +7,40 @@ import {
   maxLength,
   minLength,
 } from "@vuelidate/validators";
+import type { FormInputs } from "./types";
+
+export type Validators = { [index: keyof FormInputs]: Validator[] };
+export type Validator = (input: any) => true | string;
+
+export function getValidators(
+  password: string | undefined = undefined
+): Validators {
+
+const validators = new Map();
+validators.set("email",[])
+
+{
+  email: { required, isEmail, maxChars: maxSize(99) },
+  name: { required, isWords, minChars: minSize(2) },
+  postcode: { required, isNumber, chars: size(5) },
+  city: { required, isWords, minChars: minSize(2) },
+  phone: { required, isPhone, minDigit: minDigit(8), maxDigit: maxDigit(15) },
+  password: {
+    required,
+    minChars: minSize(8),
+    maxChars: maxSize(49),
+    isPassword,
+    containOneNumber,
+    containOneUpper,
+    containOneLower,
+  },
+  readLegals: { required, isChecked },
+});
+  if(password !== undefined){
+    validators["passwordRepeat"]
+  }
+  passwordRepeat: { required, equals: equals(password) },
+}
 
 const i18n_prefix = "validationErrorMessages.";
 

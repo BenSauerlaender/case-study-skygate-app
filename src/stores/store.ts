@@ -75,3 +75,14 @@ export const useStore = defineStore({
     },
   },
 });
+
+export type User = {
+  email: string;
+  name: string;
+  postcode: string;
+  city: string;
+  phone: string;
+  password: string;
+};
+
+export type UserWithID = User & { id: number };

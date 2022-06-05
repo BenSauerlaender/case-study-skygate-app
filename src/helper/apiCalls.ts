@@ -1,18 +1,10 @@
+import type { User } from "@/stores/store";
 import axios from "axios";
 import { ConnectionError, InvalidPropsError } from "./errors";
 
 const API_URL = "http://localhost:3000/api/v1";
 
-export type RegistrationProps = {
-  email: string;
-  name: string;
-  postcode: string;
-  city: string;
-  phone: string;
-  password: string;
-};
-
-async function sendRegistration(props: RegistrationProps): Promise<void> {
+async function sendRegistration(props: User): Promise<void> {
   try {
     await axios.post(API_URL + "/register", props);
     return;

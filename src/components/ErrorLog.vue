@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const props = defineProps({
-  errorMap: { type: Object, required: true },
-});
+const props = defineProps<{
+  errorMap: Map<string, string[]>;
+}>();
 </script>
 
 <template>
