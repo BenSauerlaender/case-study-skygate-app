@@ -100,22 +100,22 @@
         },
         "validationErrorMessages": {
             "required": "Muss angegeben werden!",
-            "maxSize": {
+            "maxLength": {
                 "_pre": "Darf maximal",
                 "_post": "Zeichen lang sein.",
-                "99": "@:validationErrorMessages.maxSize._pre 99 @:validationErrorMessages.maxSize._post",
-                "49": "@:validationErrorMessages.maxSize._pre 49 @:validationErrorMessages.maxSize._post"
+                "99": "@:validationErrorMessages.maxLength._pre 99 @:validationErrorMessages.maxLength._post",
+                "49": "@:validationErrorMessages.maxLength._pre 49 @:validationErrorMessages.maxLength._post"
             },
-            "minSize": {
+            "minLength": {
                 "_pre": "Muss mindestens",
-                "_post": "@:validationErrorMessages.maxSize._post",
-                "2": "@:validationErrorMessages.minSize._pre 2 @:validationErrorMessages.minSize._post",
-                "8": "@:validationErrorMessages.minSize._pre 8 @:validationErrorMessages.minSize._post"
+                "_post": "@:validationErrorMessages.maxLength._post",
+                "2": "@:validationErrorMessages.minLength._pre 2 @:validationErrorMessages.minLength._post",
+                "8": "@:validationErrorMessages.minLength._pre 8 @:validationErrorMessages.minLength._post"
             },
-            "size": {
+            "length": {
                 "_pre": "Muss genau",
-                "_post": "@:validationErrorMessages.maxSize._post",
-                "5": "@:validationErrorMessages.size._pre 5 @:validationErrorMessages.size._post"
+                "_post": "@:validationErrorMessages.maxLength._post",
+                "5": "@:validationErrorMessages.length_pre 5 @:validationErrorMessages.length._post"
             },
             "maxDigit": {
                 "_pre": "Darf maximal",

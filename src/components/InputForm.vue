@@ -2,16 +2,19 @@
 import ErrorLog from "@/components/ErrorLog.vue";
 import InputFields from "./InputFields.vue";
 import type { ApiResponseStatus, FormInputs } from "@/helper/types";
-import { computed, ref, type Ref } from "vue";
-import { getValidators } from "@/helper/validators";
+import { computed, ref, watch, type Ref } from "vue";
+import { getValidators, required } from "@/helper/validators";
+import type { User } from "@/stores/store";
 
 const props = defineProps<{
   fields: Array<keyof FormInputs>;
   submitButtonText: string;
-  externalValidationError: Map<keyof FormInputs, string[]>;
+  externalValidationError: Map<keyof User, string[]>;
   responseStatus: ApiResponseStatus;
 }>();
-const emit = defineEmits(["submitForm"]);
+const emit = defineEmits<{
+  (e: "submitForm", inputs: FormInputs | null): void;
+}>();
 
 /**
  * A map that holds for each input-field a list of errorMessages.
@@ -21,6 +24,11 @@ const emit = defineEmits(["submitForm"]);
 const validationErrorMessageMap: Ref<Map<keyof FormInputs, string[]>> = ref(
   new Map()
 );
+
+const combinedInvalidFields = computed(() => [
+  ...invalidFields.value,
+  ...props.externalValidationError.keys(),
+]);
 
 const combinedValidationErrorMessageMap = computed(() => {
   const combined = new Map(validationErrorMessageMap.value.entries());
@@ -33,6 +41,18 @@ const combinedValidationErrorMessageMap = computed(() => {
 
 const invalidFields: Ref<Array<keyof FormInputs>> = ref([]);
 const submitted: Ref<boolean> = ref(false);
+const clearing: Ref<boolean> = ref(false);
+
+watch(
+  () => props.responseStatus,
+  (status) => {
+    if (status === "successful" || status === "error") {
+      clearing.value = true;
+      console.log("clear1");
+    }
+  }
+);
+const wasCleared = () => (clearing.value = false);
 
 //event triggered by submit button click
 const onSubmit = (event: Event) => {
@@ -43,23 +63,29 @@ const onSubmit = (event: Event) => {
 };
 
 //get the inputs form InputFields -> sendInputs
-const getInputs = async (inputs: FormInputs) => {
+const getInputs = (inputs: FormInputs) => {
   validationErrorMessageMap.value = new Map();
 
   //validate each field
   props.fields.forEach((field) => {
-    //check each validator
-    getValidators(inputs["password"] ?? "")
-      .get(field)!
-      .forEach((validator) => {
-        const valid = validator(inputs[field]);
-        //if validation fails
-        if (valid !== true) {
-          //add message to validationErrorMessageMap
-          const messages = validationErrorMessageMap.value.get(field) ?? [];
-          validationErrorMessageMap.value.set(field, [...messages, valid]);
-        }
-      });
+    //check if required fields are present
+    const isPresent = required(inputs[field]);
+    if (isPresent === true) {
+      //check each validator
+      getValidators(inputs["password"] ?? "")
+        .get(field)!
+        .forEach((validator) => {
+          const valid = validator(inputs[field]);
+          //if validation fails
+          if (valid !== true) {
+            //add message to validationErrorMessageMap
+            const messages = validationErrorMessageMap.value.get(field) ?? [];
+            validationErrorMessageMap.value.set(field, [...messages, valid]);
+          }
+        });
+    } else {
+      validationErrorMessageMap.value.set(field, [isPresent]);
+    }
   });
 
   //if evrything is valid send to parent
@@ -67,6 +93,7 @@ const getInputs = async (inputs: FormInputs) => {
     invalidFields.value = [];
     emit("submitForm", inputs);
   } else {
+    emit("submitForm", null);
     invalidFields.value = [...validationErrorMessageMap.value.keys()];
   }
 
@@ -80,13 +107,15 @@ const getInputs = async (inputs: FormInputs) => {
     <div id="inputs">
       <InputFields
         :fields="props.fields"
-        :invalidFields="invalidFields"
+        :invalidFields="combinedInvalidFields"
         :submitted="submitted"
+        :clearing="clearing"
         @sendInputs="getInputs"
+        @sendCleared="wasCleared"
       />
     </div>
     <ErrorLog
-      v-if="invalidFields.length > 0"
+      v-if="combinedInvalidFields.length > 0"
       :errorMap="combinedValidationErrorMessageMap"
     />
   </div>

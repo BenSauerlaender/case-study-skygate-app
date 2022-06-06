@@ -1,3 +1,5 @@
+import type { User } from "@/stores/store";
+
 export class ConnectionError extends Error {
   constructor(msg: string = "") {
     super(msg);
@@ -8,7 +10,7 @@ export class ConnectionError extends Error {
 }
 
 export class InvalidPropsError extends Error {
-  invalidProps: { [index: string]: Array<string> };
+  invalidProps: Map<keyof User, string[]> = new Map();
   constructor(
     msg: string = "",
     props: { [index: string]: Array<string> } = {}
@@ -18,6 +20,8 @@ export class InvalidPropsError extends Error {
     // Set the prototype explicitly.
     Object.setPrototypeOf(this, InvalidPropsError.prototype);
 
-    this.invalidProps = props;
+    Object.keys(props).forEach((key) => {
+      this.invalidProps.set(key as keyof User, props[key]);
+    });
   }
 }
