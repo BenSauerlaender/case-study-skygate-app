@@ -14,6 +14,7 @@ export function getValidators(
   validators.set("postcode", [isNumber, length(5)]);
   validators.set("city", [isWords, minLength(2)]);
   validators.set("phone", [isPhone, minDigit(8), maxDigit(15)]);
+  validators.set("oldPassword", []);
   validators.set("password", [
     minLength(8),
     maxLength(49),

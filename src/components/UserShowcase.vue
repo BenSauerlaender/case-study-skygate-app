@@ -8,9 +8,10 @@ import { computed, toRefs, type ComputedRef } from "vue";
 
 const props = defineProps<{
   user: UserWithID;
+  editable: boolean;
 }>();
 
-const { user } = toRefs(props);
+const { user, editable } = toRefs(props);
 
 const userWithoutID: ComputedRef<User> = computed(() => {
   let u = { ...user.value } as any;
@@ -24,20 +25,22 @@ const userWithoutID: ComputedRef<User> = computed(() => {
     <UserDataView :user="userWithoutID" />
   </div>
   <br />
-  <h1>{{ $t("components.userShowcase.header.changeContactData") }}</h1>
+  <template v-if="editable">
+  <h1>{{ $t("components.userShowcase.headers.changeContactData") }}</h1>
   <div class="section">
     <ContactDataChange :user="user" />
   </div>
   <br />
-  <h1>{{ $t("components.userShowcase.header.changeEmail") }}</h1>
+  <h1>{{ $t("components.userShowcase.headers.changeEmail") }}</h1>
   <div class="section">
-    <!--<EmailChange :userID="user.id" />-->
+    <EmailChange :userID="user.id" :oldEmail="user.email" />
   </div>
   <br />
-  <h1>{{ $t("components.userShowcase.header.changePassword") }}</h1>
+  <h1>{{ $t("components.userShowcase.headers.changePassword") }}</h1>
   <div class="section">
-    <!--<PasswordChange :userID="user.id" />-->
+    <PasswordChange :userID="user.id" />
   </div>
+</template>
 </template>
 <style scoped>
 .section {

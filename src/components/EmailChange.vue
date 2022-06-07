@@ -7,7 +7,10 @@ import InputForm from "./InputForm.vue";
 
 const props = defineProps<{
   userID: number;
+  oldEmail: string;
 }>();
+
+const newEmail = ref("");
 
 const store = useStore();
 
@@ -16,8 +19,9 @@ const validationErrorMessageMap: Ref<Map<keyof User, string[]>> = ref(
   new Map()
 );
 
-const changeData = (inputs: Partial<FormInputs> | null) => {
-  if (inputs === null) {
+const changeEmail = (inputs: Partial<FormInputs> | null) => {
+  const email = inputs!.email!;
+  if (!email || email === props.oldEmail) {
     apiResponseStatus.value = undefined;
     validationErrorMessageMap.value = new Map();
   } else {
@@ -26,19 +30,26 @@ const changeData = (inputs: Partial<FormInputs> | null) => {
     apiResponseStatus.value = "pending";
 
     store
-      .updateUserEmail(props.user.id, inputs)
+      .updateUsersEmail(props.userID, email)
       .then(() => {
         apiResponseStatus.value = "successful";
+        newEmail.value = email;
       })
       .catch((err) => {
         if (err instanceof InvalidPropsError) {
           apiResponseStatus.value = undefined;
 
-          console.log(err.invalidProps);
           err.invalidProps.forEach((value, key) => {
-            validationErrorMessageMap.value.set(key, [
-              "validationErrorMessages.needToBeValid",
-            ]);
+            if (key === "email" && value[0] === "IS_TAKEN") {
+              validationErrorMessageMap.value.set("email", [
+                "validationErrorMessages.isTaken",
+              ]);
+              console.log(validationErrorMessageMap.value);
+            } else {
+              validationErrorMessageMap.value.set(key, [
+                "validationErrorMessages.needToBeValid",
+              ]);
+            }
           });
         } else {
           apiResponseStatus.value = "error";
@@ -51,13 +62,10 @@ const changeData = (inputs: Partial<FormInputs> | null) => {
 <template>
   <InputForm
     :fields="{
-      name: user.name,
-      postcode: user.postcode,
-      city: user.city,
-      phone: user.phone,
+      email:'' 
     }"
-    submitButtonText="components.userDataChange.buttons.change"
-    @submitForm="changeData"
+    submitButtonText="components.emailChange.buttons.change"
+    @submitForm="changeEmail"
     :externalValidationError="validationErrorMessageMap"
     :responseStatus="apiResponseStatus"
   />
@@ -65,7 +73,7 @@ const changeData = (inputs: Partial<FormInputs> | null) => {
   <br />
   <h3 v-if="apiResponseStatus === 'pending'">{{ $t("messages.loading") }}</h3>
   <h3 id="success" v-if="apiResponseStatus === 'successful'">
-    {{ $t("components.userDataChange.messages.successful") }}
+    {{ $t("components.emailChange.messages.successful", {email: newEmail}) }}
   </h3>
   <h3 id="error" v-if="apiResponseStatus === 'error'">
     {{ $t("messages.connectionError") }}

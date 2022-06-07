@@ -7,6 +7,8 @@ import NotFound from "../views/NotFoundView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import SearchView from "../views/SearchView.vue";
 import UserView from "../views/UserView.vue";
+import PasswordChangedView from "../views/PasswordChangedView.vue";
+import EmailChangedView from "../views/EmailChangedView.vue";
 import { useStore } from "@/stores/store";
 
 const router = createRouter({
@@ -33,6 +35,14 @@ const router = createRouter({
     {
       path: "/terms-of-use",
       component: TermsOfUseView,
+    },
+    {
+      path: "/email-changed",
+      component: EmailChangedView,
+    },
+    {
+      path: "/password-changed",
+      component: PasswordChangedView,
     },
     {
       path: "/search",

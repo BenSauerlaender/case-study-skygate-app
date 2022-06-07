@@ -4,12 +4,11 @@ import InputFields from "./InputFields.vue";
 import type { ApiResponseStatus, FormInputs } from "@/helper/types";
 import { computed, ref, watch, type Ref } from "vue";
 import { getValidators, required } from "@/helper/validators";
-import type { User } from "@/stores/store";
 
 const props = defineProps<{
   fields: FormInputs;
   submitButtonText: string;
-  externalValidationError: Map<keyof User, string[]>;
+  externalValidationError: Map<keyof FormInputs, string[]>;
   responseStatus: ApiResponseStatus;
 }>();
 const emit = defineEmits<{
@@ -48,7 +47,6 @@ watch(
   (status) => {
     if (status === "successful" || status === "error") {
       clearing.value = true;
-      console.log("clear1");
     }
   }
 );

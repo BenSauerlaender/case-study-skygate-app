@@ -1,6 +1,6 @@
 import type { User, UserWithID } from "@/stores/store";
 import axios from "axios";
-import { ConnectionError, InvalidPropsError } from "./errors";
+import { BadPasswordError, ConnectionError, InvalidPropsError } from "./errors";
 
 const API_URL = "http://localhost:3000/api/v1";
 
@@ -83,6 +83,56 @@ async function updateUser(
   }
 }
 
+async function updateEmail(
+  userID: number,
+  email: string,
+  token: string
+): Promise<void> {
+  try {
+    await axios.post(API_URL + `/users/${userID}/emailChange`, {email: email}, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+  } catch (err: any) {
+    if (err.response) {
+      if (err.response.status === 400) {
+        const data = err.response.data;
+        if (data.errorCode === 102) {
+          throw new InvalidPropsError("", data.invalidProperties);
+        }
+      }
+    }
+    throw new ConnectionError();
+  }
+}
+
+async function updatePassword(
+  userID: number,
+  oldPassword: string,
+  newPassword: string,
+  token: string
+): Promise<void> {
+  try {
+    await axios.put(API_URL + `/users/${userID}/password`, {oldPassword: oldPassword, newPassword:newPassword }, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+  } catch (err: any) {
+    if (err.response) {
+      if (err.response.status === 400) {
+        const data = err.response.data;
+        if (data.errorCode === 215) {
+          throw new BadPasswordError();
+        }else if (data.errorCode === 102) {
+          throw new InvalidPropsError("", data.invalidProperties);
+        }
+      }
+    }
+    throw new ConnectionError();
+  }
+}
 async function sendLogout(userID: number, token: string): Promise<void> {
   try {
     await axios.post(
@@ -115,4 +165,6 @@ export const api = {
   sendLogout,
   getUser,
   updateUser,
+  updateEmail,
+  updatePassword
 };

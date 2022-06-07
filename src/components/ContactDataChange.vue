@@ -64,7 +64,7 @@ const changeData = (inputs: Partial<FormInputs> | null) => {
       city: user.city,
       phone: user.phone,
     }"
-    submitButtonText="components.userDataChange.buttons.change"
+    submitButtonText="components.contactDataChange.buttons.change"
     @submitForm="changeData"
     :externalValidationError="validationErrorMessageMap"
     :responseStatus="apiResponseStatus"
@@ -73,7 +73,7 @@ const changeData = (inputs: Partial<FormInputs> | null) => {
   <br />
   <h3 v-if="apiResponseStatus === 'pending'">{{ $t("messages.loading") }}</h3>
   <h3 id="success" v-if="apiResponseStatus === 'successful'">
-    {{ $t("components.userDataChange.messages.successful") }}
+    {{ $t("components.contactDataChange.messages.successful") }}
   </h3>
   <h3 id="error" v-if="apiResponseStatus === 'error'">
     {{ $t("messages.connectionError") }}

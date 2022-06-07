@@ -43,7 +43,6 @@ const register = (inputs: Partial<FormInputs> | null) => {
         if (err instanceof InvalidPropsError) {
           apiResponseStatus.value = undefined;
 
-          console.log(err.invalidProps);
           err.invalidProps.forEach((value, key) => {
             if (key === "email" && value[0] === "IS_TAKEN") {
               console.log(value);

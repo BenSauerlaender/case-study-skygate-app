@@ -9,6 +9,15 @@ export class ConnectionError extends Error {
   }
 }
 
+export class BadPasswordError extends Error {
+  constructor(msg: string = "") {
+    super(msg);
+
+    // Set the prototype explicitly.
+    Object.setPrototypeOf(this, BadPasswordError.prototype);
+  }
+}
+
 export class InvalidPropsError extends Error {
   invalidProps: Map<keyof User, string[]> = new Map();
   constructor(

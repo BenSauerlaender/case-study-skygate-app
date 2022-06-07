@@ -6,6 +6,7 @@ export type FormInputs = Partial<{
   postcode: string;
   city: string;
   phone: string;
+  oldPassword: string;
   password: string;
   passwordRepeat: string;
   readLegals: boolean;

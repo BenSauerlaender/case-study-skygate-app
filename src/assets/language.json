@@ -19,6 +19,14 @@
                     "alreadyLoggedIn": "Du bist bereits eingelogged."
                 }
             },
+            "passwordChanged": {
+                "name": "Das @:{'userProps.password.long'} wurde erfolgreich geändert",
+                "message": "Aus Sicherheitsgründen, wurdest du ausgeloggt."
+            },
+            "emailChanged": {
+                "name": "Die @:{'userProps.email.long'} wurde erfolgreich geändert",
+                "message": "Aus Sicherheitsgründen, wurdest du ausgeloggt."
+            },
             "register": {
                 "name": "Neuen Account Erstellen",
                 "buttons": {
@@ -46,6 +54,39 @@
             },
             "notFound": {
                 "message": "Diese Seite existiret nicht :("
+            }
+        },
+        "components": {
+            "userShowcase": {
+                "headers": {
+                    "changeContactData": "Kontaktdaten ändern",
+                    "changeEmail": "@:{'userProps.email.long'} ändern",
+                    "changePassword": "@:{'userProps.password.long'} ändern"
+                }
+            },
+            "contactDataChange": {
+                "buttons": {
+                    "change": "ändern"
+                },
+                "messages": {
+                    "successful": "Die Daten wurden erfolgreich geändert"
+                }
+            },
+            "emailChange": {
+                "buttons": {
+                    "change": "ändern"
+                },
+                "messages": {
+                    "successful": "Bitte klicke auf den Link, der an die @:{'userProps.email.short'}: {email} gesendet wurde, um die änderung zu bestätigen."
+                }
+            },
+            "passwordChange": {
+                "buttons": {
+                    "change": "ändern"
+                },
+                "messages": {
+                    "successful": "Das @:{'userProps.password.short'} wurde erfolgreich geändert."
+                }
             }
         },
         "userProps": {
@@ -92,6 +133,9 @@
             },
             "phone": {
                 "label": "@:{'userProps.phone.long'}:"
+            },
+            "oldPassword": {
+                "label": "aktuelles @:{'userProps.password.short'}:"
             },
             "password": {
                 "label": "@:{'userProps.password.short'}:"
@@ -143,7 +187,8 @@
             "containOneNumber": "Muss mindestens eine Ziffer enthalten",
             "containOneUpper": "Muss mindestens einen Großbuchstaben enthalten",
             "containOneLower": "Muss mindestens einen Kleinbuchstaben enthalten",
-            "isTaken": "Ist bereits vergeben"
+            "isTaken": "Ist bereits vergeben",
+            "incorrectPassword": "Ist nicht korrekt"
         },
         "messages": {
             "loading": "loading...",

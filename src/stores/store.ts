@@ -73,6 +73,14 @@ export const useStore = defineStore({
       this.accessToken = null;
     },
 
+    async updateUsersEmail(id: number, email:string): Promise<void> {
+      await api.updateEmail(id, email, this.accessToken!);
+    },
+
+    async updateUsersPassword(id: number, oldPassword:string, newPassword:string): Promise<void> {
+      await api.updatePassword(id, oldPassword, newPassword, this.accessToken!);
+    },
+
     async updateUser(id: number, data: Partial<User>): Promise<void> {
       await api.updateUser(id, data, this.accessToken!);
       await this.fetchUser();

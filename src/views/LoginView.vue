@@ -2,6 +2,7 @@
 import Form from "@/components/LoginForm.vue";
 import { useStore } from "@/stores/store";
 import { storeToRefs } from "pinia";
+import { RouterLink } from "vue-router";
 import { ref } from "vue";
 
 const store = useStore();

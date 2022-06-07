@@ -25,7 +25,6 @@ watch(
   (status) => {
     if (status) {
       Object.assign(formInputs.value, props.fields);
-      console.log("clear2");
       emit("sendCleared");
     }
   }
@@ -52,7 +51,7 @@ watch(
         :class="{ invalid: invalidFields.includes(field) }"
       />
     </div>
-    <div v-if="['password', 'passwordRepeat'].includes(field)">
+    <div v-if="['oldPassword','password', 'passwordRepeat'].includes(field)">
       <label :for="field">{{ $t("inputFields." + field + ".label") }}</label>
       <br />
       <input
