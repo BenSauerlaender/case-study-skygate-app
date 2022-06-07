@@ -1,43 +1,42 @@
 <script setup lang="ts">
-import { ref, type Ref } from "vue";
-import { useStore, type User } from "@/stores/store";
 import { InvalidPropsError } from "@/helper/errors";
-import InputForm from "./InputForm.vue";
 import type { ApiResponseStatus, FormInputs } from "@/helper/types";
+import { useStore, type User, type UserWithID } from "@/stores/store";
+import { ref, type Ref } from "vue";
+import InputForm from "./InputForm.vue";
+
+const props = defineProps<{
+  user: UserWithID;
+}>();
 
 const store = useStore();
 
-const emailSendTo = ref("");
-
-/**
- * A map that holds for each input-field a list of errorMessages.
- *
- * The errorMessages are path to the i18n messages to show the user
- */
+const apiResponseStatus: Ref<ApiResponseStatus> = ref(undefined);
 const validationErrorMessageMap: Ref<Map<keyof User, string[]>> = ref(
   new Map()
 );
 
-const apiResponseStatus: Ref<ApiResponseStatus> = ref(undefined);
-
-/**
- * Event to register the new user (invoked by user-button-click)
- */
-const register = (inputs: Partial<FormInputs> | null) => {
-  if (inputs === null) {
+const changeData = (inputs: Partial<FormInputs> | null) => {
+  //remove props that have not been changed
+  const clearedInputs = {...inputs};
+  Object.keys(inputs ?? {}).forEach((prop) => {
+    if((inputs ?? {})[prop as keyof FormInputs] === props.user[prop as keyof User]){
+      delete clearedInputs[prop as keyof FormInputs];
+    }
+  })
+  //check if any props should be updated
+  if (clearedInputs === null || Object.keys(clearedInputs).length === 0) {
     apiResponseStatus.value = undefined;
     validationErrorMessageMap.value = new Map();
   } else {
     if (apiResponseStatus.value === "pending") return;
-
     validationErrorMessageMap.value = new Map();
     apiResponseStatus.value = "pending";
 
     store
-      .registerUser(inputs as User)
+      .updateUser(props.user.id, clearedInputs)
       .then(() => {
         apiResponseStatus.value = "successful";
-        emailSendTo.value = inputs.email!;
       })
       .catch((err) => {
         if (err instanceof InvalidPropsError) {
@@ -45,17 +44,9 @@ const register = (inputs: Partial<FormInputs> | null) => {
 
           console.log(err.invalidProps);
           err.invalidProps.forEach((value, key) => {
-            if (key === "email" && value[0] === "IS_TAKEN") {
-              console.log(value);
-              validationErrorMessageMap.value.set("email", [
-                "validationErrorMessages.isTaken",
-              ]);
-              console.log(validationErrorMessageMap.value);
-            } else {
-              validationErrorMessageMap.value.set(key, [
-                "validationErrorMessages.needToBeValid",
-              ]);
-            }
+            validationErrorMessageMap.value.set(key, [
+              "validationErrorMessages.needToBeValid",
+            ]);
           });
         } else {
           apiResponseStatus.value = "error";
@@ -68,17 +59,13 @@ const register = (inputs: Partial<FormInputs> | null) => {
 <template>
   <InputForm
     :fields="{
-      email: '',
-      name: '',
-      postcode: '',
-      city: '',
-      phone: '',
-      password: '',
-      passwordRepeat: '',
-      readLegals: false,
+      name: user.name,
+      postcode: user.postcode,
+      city: user.city,
+      phone: user.phone,
     }"
-    submitButtonText="sites.register.buttons.register"
-    @submitForm="register"
+    submitButtonText="components.userDataChange.buttons.change"
+    @submitForm="changeData"
     :externalValidationError="validationErrorMessageMap"
     :responseStatus="apiResponseStatus"
   />
@@ -86,13 +73,12 @@ const register = (inputs: Partial<FormInputs> | null) => {
   <br />
   <h3 v-if="apiResponseStatus === 'pending'">{{ $t("messages.loading") }}</h3>
   <h3 id="success" v-if="apiResponseStatus === 'successful'">
-    {{ $t("sites.register.messages.successful", { email: emailSendTo }) }}
+    {{ $t("components.userDataChange.messages.successful") }}
   </h3>
   <h3 id="error" v-if="apiResponseStatus === 'error'">
     {{ $t("messages.connectionError") }}
   </h3>
 </template>
-
 <style scoped>
 #success {
   color: var(--color-success);

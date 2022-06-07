@@ -7,7 +7,7 @@ import { getValidators, required } from "@/helper/validators";
 import type { User } from "@/stores/store";
 
 const props = defineProps<{
-  fields: Array<keyof FormInputs>;
+  fields: FormInputs;
   submitButtonText: string;
   externalValidationError: Map<keyof User, string[]>;
   responseStatus: ApiResponseStatus;
@@ -67,7 +67,7 @@ const getInputs = (inputs: FormInputs) => {
   validationErrorMessageMap.value = new Map();
 
   //validate each field
-  props.fields.forEach((field) => {
+  (Object.keys(props.fields) as Array<keyof FormInputs>).forEach((field) => {
     //check if required fields are present
     const isPresent = required(inputs[field]);
     if (isPresent === true) {
@@ -119,6 +119,7 @@ const getInputs = (inputs: FormInputs) => {
       :errorMap="combinedValidationErrorMessageMap"
     />
   </div>
+  <br />
   <button @click="onSubmit">{{ $t(props.submitButtonText) }}</button>
 </template>
 

@@ -3,7 +3,7 @@ import { ref, toRefs, watch, type Ref } from "vue";
 import type { FormInputs } from "@/helper/types";
 
 const props = defineProps<{
-  fields: Array<keyof FormInputs>;
+  fields: FormInputs;
   invalidFields: Array<keyof FormInputs>;
   submitted: boolean;
   clearing: Boolean;
@@ -15,32 +15,16 @@ const emit = defineEmits<{
 
 const { fields, invalidFields } = toRefs(props);
 
-//get only the initial values of the selected fields
-const initialInputValues: FormInputs = Object.assign(
-  {},
-  ...props.fields.map((key) => ({
-    [key]: {
-      email: "",
-      name: "",
-      postcode: "",
-      city: "",
-      phone: "",
-      password: "",
-      passwordRepeat: "",
-      readLegals: false,
-    }[key],
-  }))
-);
 /**
  * Information the user inserts to the register form
  */
-const formInputs: Ref<FormInputs> = ref({ ...initialInputValues });
+const formInputs: Ref<FormInputs> = ref({ ...props.fields });
 
 watch(
   () => props.clearing,
   (status) => {
     if (status) {
-      Object.assign(formInputs.value, initialInputValues);
+      Object.assign(formInputs.value, props.fields);
       console.log("clear2");
       emit("sendCleared");
     }
@@ -58,7 +42,7 @@ watch(
 </script>
 
 <template>
-  <template v-for="field in fields">
+  <template v-for="(x, field) in fields">
     <div v-if="['email', 'name', 'postcode', 'city', 'phone'].includes(field)">
       <label :for="field">{{ $t("inputFields." + field + ".label") }}</label>
       <br />

@@ -6,10 +6,6 @@ import { ref } from "vue";
 
 const store = useStore();
 const { loggedIn } = storeToRefs(store);
-
-function logout(event: Event) {
-  store.logoutUser();
-}
 </script>
 
 <template>
@@ -24,7 +20,9 @@ function logout(event: Event) {
   </div>
   <div v-else-if="loggedIn === true">
     <h3>{{ $t("sites.login.messages.alreadyLoggedIn") }}</h3>
-    <button @click="logout">{{ $t("sites.login.buttons.logout") }}</button>
+    <button @click="store.logoutUser">
+      {{ $t("sites.login.buttons.logout") }}
+    </button>
   </div>
 </template>
 <style scoped>

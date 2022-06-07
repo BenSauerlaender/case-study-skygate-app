@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
-import { api, type RegistrationProps } from "@/helper/apiCalls";
+import { api } from "@/helper/apiCalls";
 
 export const useStore = defineStore({
   id: "store",
   state: () => ({
     accessToken: undefined as null | undefined | string,
     accessTokenAutoRefreshTimeout: null as null | number,
-    user: null,
+    user: null as UserWithID | null,
   }),
   getters: {
     loggedIn(): boolean | undefined {
@@ -19,7 +19,7 @@ export const useStore = defineStore({
     },
   },
   actions: {
-    async registerUser(props: RegistrationProps): Promise<void> {
+    async registerUser(props: User): Promise<void> {
       //filter out all other (not needed keys)
       return await api.sendRegistration(
         Object.assign(
@@ -66,12 +66,23 @@ export const useStore = defineStore({
       }
     },
     async logoutUser(): Promise<void> {
-      if (!this.accessToken) throw new Error("UserNotLoggedIn");
       if (this.accessTokenAutoRefreshTimeout) {
         clearTimeout(this.accessTokenAutoRefreshTimeout);
       }
-      await api.sendLogout(this.accessTokenPayload?.id!, this.accessToken);
+      await api.sendLogout(this.accessTokenPayload?.id!, this.accessToken!);
       this.accessToken = null;
+    },
+
+    async updateUser(id: number, data: Partial<User>): Promise<void> {
+      await api.updateUser(id, data, this.accessToken!);
+      await this.fetchUser();
+    },
+
+    async fetchUser(): Promise<void> {
+      this.user = await api.getUser(
+        this.accessTokenPayload!.id,
+        this.accessToken!
+      );
     },
   },
 });

@@ -6,6 +6,7 @@ import TermsOfUseView from "../views/TermsOfUseView.vue";
 import NotFound from "../views/NotFoundView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import SearchView from "../views/SearchView.vue";
+import UserView from "../views/UserView.vue";
 import { useStore } from "@/stores/store";
 
 const router = createRouter({
@@ -13,34 +14,28 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "home",
       redirect: (to) => {
         return { path: "/login" };
       },
     },
     {
       path: "/login",
-      name: "login",
       component: LoginView,
     },
     {
       path: "/register",
-      name: "register",
       component: RegisterView,
     },
     {
       path: "/privacy",
-      name: "privacy",
       component: PrivacyView,
     },
     {
       path: "/terms-of-use",
-      name: "terms-of-use",
       component: TermsOfUseView,
     },
     {
       path: "/search",
-      name: "search",
       component: SearchView,
       meta: {
         requiresLogin: true,
@@ -48,8 +43,14 @@ const router = createRouter({
     },
     {
       path: "/profile",
-      name: "profile",
       component: ProfileView,
+      meta: {
+        requiresLogin: true,
+      },
+    },
+    {
+      path: "/user/:id",
+      component: UserView,
       meta: {
         requiresLogin: true,
       },

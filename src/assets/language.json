@@ -62,13 +62,19 @@
                 "long": "Postleitzahl"
             },
             "city": {
-                "short": "Ort"
+                "short": "Ort",
+                "long": "@:{'userProps.city.short'}"
             },
             "phone": {
                 "long": "Telefonnummer"
             },
             "password": {
-                "short": "Passwort"
+                "short": "Passwort",
+                "long": "@:{'userProps.password.short'}"
+            },
+            "role": {
+                "short": "Rolle",
+                "long": "Benutzer-@:{'userProps.role.short'}"
             }
         },
         "inputFields": {

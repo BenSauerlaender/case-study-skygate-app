@@ -22,7 +22,7 @@ const pinia = createPinia();
 app.use(pinia);
 
 const store = useStore();
-store.loginSilently();
+await store.loginSilently();
 
 app.use(router);
 app.use(i18n);
