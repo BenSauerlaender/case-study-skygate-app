@@ -43,7 +43,18 @@
                 "name": "Mein Profil"
             },
             "search": {
-                "name": "User Suche"
+                "name": "User Suche",
+                "buttons": {
+                    "search": "suchen"
+                },
+                "messages": {
+                    "invalidSearch": "Die Suche ist ungültig und kann nicht aufgeführt werden.",
+                    "sort": "Sortieren nach",
+                    "sorting": {
+                    "asc": "aufsteigend",
+                    "desc": "absteigend"
+                    }
+                }
             },
             "privacy": {
                 "name": "Datenschutz",
@@ -107,7 +118,8 @@
                 "long": "@:{'userProps.city.short'}"
             },
             "phone": {
-                "long": "Telefonnummer"
+                "short": "Telefon",
+                "long": "@:{'userProps.phone.short'}nummer"
             },
             "password": {
                 "short": "Passwort",

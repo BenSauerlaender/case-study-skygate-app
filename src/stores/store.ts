@@ -7,6 +7,7 @@ export const useStore = defineStore({
     accessToken: undefined as null | undefined | string,
     accessTokenAutoRefreshTimeout: null as null | number,
     user: null as UserWithID | null,
+    roles: [] as string[],
   }),
   getters: {
     loggedIn(): boolean | undefined {
@@ -73,11 +74,15 @@ export const useStore = defineStore({
       this.accessToken = null;
     },
 
-    async updateUsersEmail(id: number, email:string): Promise<void> {
+    async updateUsersEmail(id: number, email: string): Promise<void> {
       await api.updateEmail(id, email, this.accessToken!);
     },
 
-    async updateUsersPassword(id: number, oldPassword:string, newPassword:string): Promise<void> {
+    async updateUsersPassword(
+      id: number,
+      oldPassword: string,
+      newPassword: string
+    ): Promise<void> {
       await api.updatePassword(id, oldPassword, newPassword, this.accessToken!);
     },
 
@@ -92,9 +97,15 @@ export const useStore = defineStore({
         this.accessToken!
       );
     },
+    async getSearchLength(query: SearchQuery): Promise<number> {
+      return await api.getSearchLength(query, this.accessToken!);
+    },
   },
 });
 
+export type SearchQuery = Partial<
+  User & { page: string; index: string; sortby: keyof User; DESC: null }
+>;
 export type User = {
   email: string;
   name: string;

@@ -9,6 +9,15 @@ export class ConnectionError extends Error {
   }
 }
 
+export class InvalidSearchError extends Error {
+  constructor(msg: string = "") {
+    super(msg);
+
+    // Set the prototype explicitly.
+    Object.setPrototypeOf(this, InvalidSearchError.prototype);
+  }
+}
+
 export class BadPasswordError extends Error {
   constructor(msg: string = "") {
     super(msg);
