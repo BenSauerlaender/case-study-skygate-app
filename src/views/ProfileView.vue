@@ -16,7 +16,12 @@ const logout = () => store.logoutUser().then(() => router.push("/login"));
 <template>
   <h1 class="heading">{{ $t("sites.profile.name") }}</h1>
   <br />
-  <UserShowcase v-if="user" :user="user" :editable="true" />
+  <UserShowcase
+    v-if="user"
+    :user="user"
+    :editable="true"
+    @user-changed="store.fetchUser"
+  />
   <br />
   <br />
   <button @click="logout">

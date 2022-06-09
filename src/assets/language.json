@@ -39,6 +39,9 @@
                     "successful": "Bitte überprüfe deine @:{'userProps.email.short'}s ({email}). Und Klicke auf den Bestätigungslink."
                 }
             },
+            "user": {
+                "name": "User-Ansicht"
+            },
             "profile": {
                 "name": "Mein Profil"
             },
@@ -51,9 +54,12 @@
                     "invalidSearch": "Die Suche ist ungültig und kann nicht aufgeführt werden.",
                     "sort": "Sortieren nach",
                     "sorting": {
-                    "asc": "aufsteigend",
-                    "desc": "absteigend"
-                    }
+                        "asc": "aufsteigend",
+                        "desc": "absteigend"
+                    },
+                    "noResults": "Es konnte kein User gefunden werden.",
+                    "resultsFound": "Es wurden {resultLength} User gefunden:",
+                    "resultsPerPage": "Ergebnisse pro Seite: "
                 }
             },
             "privacy": {
@@ -72,7 +78,13 @@
                 "headers": {
                     "changeContactData": "Kontaktdaten ändern",
                     "changeEmail": "@:{'userProps.email.long'} ändern",
+                    "deleteUser": "User löschen",
                     "changePassword": "@:{'userProps.password.long'} ändern"
+                }
+            },
+            "tablePageSelector": {
+                "messages": {
+                    "pages": "Seiten: "
                 }
             },
             "contactDataChange": {
@@ -81,6 +93,14 @@
                 },
                 "messages": {
                     "successful": "Die Daten wurden erfolgreich geändert"
+                }
+            },
+            "deleteUser": {
+                "buttons": {
+                    "delete": "Benutzer permanent löschen"
+                },
+                "messages": {
+                    "confirm": "Durch diese Aktion wird der Benutzer und alle seine Daten unwiederruflich gelöscht! \n\n Nutzer löschen?"
                 }
             },
             "emailChange": {

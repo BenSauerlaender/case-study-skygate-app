@@ -44,7 +44,6 @@ const changeEmail = (inputs: Partial<FormInputs> | null) => {
               validationErrorMessageMap.value.set("email", [
                 "validationErrorMessages.isTaken",
               ]);
-              console.log(validationErrorMessageMap.value);
             } else {
               validationErrorMessageMap.value.set(key, [
                 "validationErrorMessages.needToBeValid",
@@ -62,7 +61,7 @@ const changeEmail = (inputs: Partial<FormInputs> | null) => {
 <template>
   <InputForm
     :fields="{
-      email:'' 
+      email: '',
     }"
     submitButtonText="components.emailChange.buttons.change"
     @submitForm="changeEmail"
@@ -73,7 +72,7 @@ const changeEmail = (inputs: Partial<FormInputs> | null) => {
   <br />
   <h3 v-if="apiResponseStatus === 'pending'">{{ $t("messages.loading") }}</h3>
   <h3 id="success" v-if="apiResponseStatus === 'successful'">
-    {{ $t("components.emailChange.messages.successful", {email: newEmail}) }}
+    {{ $t("components.emailChange.messages.successful", { email: newEmail }) }}
   </h3>
   <h3 id="error" v-if="apiResponseStatus === 'error'">
     {{ $t("messages.connectionError") }}

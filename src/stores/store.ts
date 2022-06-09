@@ -7,14 +7,18 @@ export const useStore = defineStore({
     accessToken: undefined as null | undefined | string,
     accessTokenAutoRefreshTimeout: null as null | number,
     user: null as UserWithID | null,
-    roles: [] as string[],
   }),
   getters: {
     loggedIn(): boolean | undefined {
       if (this.accessToken === undefined) return undefined;
       return this.accessToken !== null;
     },
-    accessTokenPayload(): { id: number; exp: number } | undefined {
+    isAdmin(): boolean | undefined {
+      return this.accessTokenPayload?.perm.includes("user:{all}:{all}");
+    },
+    accessTokenPayload():
+      | { id: number; exp: number; perm: string }
+      | undefined {
       if (!this.accessToken) return undefined;
       return JSON.parse(window.atob(this.accessToken.split(".")[1]));
     },
@@ -72,6 +76,7 @@ export const useStore = defineStore({
       }
       await api.sendLogout(this.accessTokenPayload?.id!, this.accessToken!);
       this.accessToken = null;
+      this.user = null;
     },
 
     async updateUsersEmail(id: number, email: string): Promise<void> {
@@ -88,31 +93,43 @@ export const useStore = defineStore({
 
     async updateUser(id: number, data: Partial<User>): Promise<void> {
       await api.updateUser(id, data, this.accessToken!);
-      await this.fetchUser();
     },
 
+    async getUser(id: number): Promise<UserWithID> {
+      return await api.getUser(id, this.accessToken!);
+    },
     async fetchUser(): Promise<void> {
-      this.user = await api.getUser(
-        this.accessTokenPayload!.id,
-        this.accessToken!
-      );
+      this.user = await this.getUser(this.accessTokenPayload!.id);
     },
     async getSearchLength(query: SearchQuery): Promise<number> {
       return await api.getSearchLength(query, this.accessToken!);
+    },
+    async getSearchResults(query: SearchQuery): Promise<Array<SearchResult>> {
+      return await api.getSearchResults(query, this.accessToken!);
+    },
+    async deleteUser(id: number): Promise<void> {
+      return await api.deleteUser(id, this.accessToken!);
     },
   },
 });
 
 export type SearchQuery = Partial<
-  User & { page: string; index: string; sortby: keyof User; DESC: null }
+  BaseUser & { page: string; index: string; sortby: keyof BaseUser; DESC: null }
 >;
-export type User = {
+
+export type BaseUser = {
   email: string;
   name: string;
   postcode: string;
   city: string;
   phone: string;
+};
+export type ID = { id: number };
+
+export type SearchResult = BaseUser & ID;
+
+export type User = BaseUser & {
   password: string;
 };
 
-export type UserWithID = User & { id: number };
+export type UserWithID = User & ID;

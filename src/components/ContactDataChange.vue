@@ -2,12 +2,17 @@
 import { InvalidPropsError } from "@/helper/errors";
 import type { ApiResponseStatus, FormInputs } from "@/helper/types";
 import { useStore, type User, type UserWithID } from "@/stores/store";
-import { ref, type Ref } from "vue";
+import { ref, toRefs, type Ref } from "vue";
 import InputForm from "./InputForm.vue";
 
 const props = defineProps<{
   user: UserWithID;
 }>();
+const emit = defineEmits<{
+  (e: "userChanged"): void;
+}>();
+
+const { user } = toRefs(props);
 
 const store = useStore();
 
@@ -18,12 +23,15 @@ const validationErrorMessageMap: Ref<Map<keyof User, string[]>> = ref(
 
 const changeData = (inputs: Partial<FormInputs> | null) => {
   //remove props that have not been changed
-  const clearedInputs = {...inputs};
+  const clearedInputs = { ...inputs };
   Object.keys(inputs ?? {}).forEach((prop) => {
-    if((inputs ?? {})[prop as keyof FormInputs] === props.user[prop as keyof User]){
+    if (
+      (inputs ?? {})[prop as keyof FormInputs] ===
+      user.value[prop as keyof User]
+    ) {
       delete clearedInputs[prop as keyof FormInputs];
     }
-  })
+  });
   //check if any props should be updated
   if (clearedInputs === null || Object.keys(clearedInputs).length === 0) {
     apiResponseStatus.value = undefined;
@@ -34,15 +42,15 @@ const changeData = (inputs: Partial<FormInputs> | null) => {
     apiResponseStatus.value = "pending";
 
     store
-      .updateUser(props.user.id, clearedInputs)
+      .updateUser(user.value.id, clearedInputs)
       .then(() => {
         apiResponseStatus.value = "successful";
+        emit("userChanged");
       })
       .catch((err) => {
         if (err instanceof InvalidPropsError) {
           apiResponseStatus.value = undefined;
 
-          console.log(err.invalidProps);
           err.invalidProps.forEach((value, key) => {
             validationErrorMessageMap.value.set(key, [
               "validationErrorMessages.needToBeValid",

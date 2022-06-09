@@ -1,6 +1,17 @@
-import type { SearchQuery, User, UserWithID } from "@/stores/store";
+import type {
+  SearchQuery,
+  SearchResult,
+  User,
+  UserWithID,
+} from "@/stores/store";
 import axios from "axios";
-import { BadPasswordError, ConnectionError, InvalidPropsError, InvalidSearchError } from "./errors";
+import {
+  BadPasswordError,
+  ConnectionError,
+  InvalidPropsError,
+  InvalidSearchError,
+  NoUserError,
+} from "./errors";
 
 const API_URL = "http://localhost:3000/api/v1";
 
@@ -50,14 +61,26 @@ async function getToken(): Promise<string> {
 }
 
 async function getUser(userID: number, token: string): Promise<UserWithID> {
-  const user: User = (
-    await axios.get(API_URL + `/users/${userID}`, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    })
-  ).data;
-  return { ...user, id: userID };
+  try {
+    const user: User = (
+      await axios.get(API_URL + `/users/${userID}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+    ).data;
+    return { ...user, id: userID };
+  } catch (err: any) {
+    if (err.response) {
+      if (err.response.status === 400) {
+        const data = err.response.data;
+        if (data.errorCode === 201) {
+          throw new NoUserError();
+        }
+      }
+    }
+    throw new ConnectionError();
+  }
 }
 async function updateUser(
   userID: number,
@@ -141,6 +164,17 @@ async function updatePassword(
     throw new ConnectionError();
   }
 }
+async function deleteUser(userID: number, token: string): Promise<void> {
+  try {
+    await axios.delete(API_URL + `/users/${userID}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+  } catch (err: any) {
+    throw new ConnectionError();
+  }
+}
 async function sendLogout(userID: number, token: string): Promise<void> {
   try {
     await axios.post(
@@ -159,6 +193,35 @@ async function sendLogout(userID: number, token: string): Promise<void> {
         const data = err.response.data;
         if (data.errorCode === 102) {
           throw new InvalidPropsError("", data.invalidProperties);
+        }
+      }
+    }
+    throw new ConnectionError();
+  }
+}
+async function getSearchResults(
+  query: SearchQuery,
+  token: string
+): Promise<Array<SearchResult>> {
+  try {
+    const q: any = { ...query };
+    if (query.DESC === null) {
+      q.DESC = "";
+    }
+    return (
+      await axios.get(API_URL + `/users`, {
+        params: q,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+    ).data;
+  } catch (err: any) {
+    if (err.response) {
+      if (err.response.status === 400) {
+        const data = err.response.data;
+        if (data.errorCode === 111) {
+          throw new InvalidSearchError();
         }
       }
     }
@@ -201,4 +264,6 @@ export const api = {
   updateEmail,
   updatePassword,
   getSearchLength,
+  getSearchResults,
+  deleteUser,
 };

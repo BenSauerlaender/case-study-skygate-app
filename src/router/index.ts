@@ -17,7 +17,12 @@ const router = createRouter({
     {
       path: "/",
       redirect: (to) => {
-        return { path: "/login" };
+        const store = useStore();
+        if (store.loggedIn) {
+          return { path: "/profile" };
+        } else {
+          return { path: "/login" };
+        }
       },
     },
     {

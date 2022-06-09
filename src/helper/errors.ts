@@ -18,6 +18,15 @@ export class InvalidSearchError extends Error {
   }
 }
 
+export class NoUserError extends Error {
+  constructor(msg: string = "") {
+    super(msg);
+
+    // Set the prototype explicitly.
+    Object.setPrototypeOf(this, NoUserError.prototype);
+  }
+}
+
 export class BadPasswordError extends Error {
   constructor(msg: string = "") {
     super(msg);

@@ -9,7 +9,6 @@ import InputForm from "./InputForm.vue";
 const props = defineProps<{
   userID: number;
 }>();
-
 const router = useRouter();
 
 const store = useStore();
@@ -35,9 +34,10 @@ const changePassword = (inputs: Partial<FormInputs> | null) => {
         if (props.userID === store.user!.id) {
           setTimeout(() => {
             store.logoutUser();
-            router.push("/password-changed").then((x) => {
-              console.log(x);
-            }).catch(console.log);
+            router
+              .push("/password-changed")
+              .then((x) => {})
+              .catch(console.log);
           }, 1000);
         }
       })

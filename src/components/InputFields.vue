@@ -21,10 +21,17 @@ const { fields, invalidFields } = toRefs(props);
 const formInputs: Ref<FormInputs> = ref({ ...props.fields });
 
 watch(
+  () => fields.value,
+  () => {
+    Object.assign(formInputs.value, fields.value);
+  }
+);
+
+watch(
   () => props.clearing,
   (status) => {
     if (status) {
-      Object.assign(formInputs.value, props.fields);
+      Object.assign(formInputs.value, fields.value);
       emit("sendCleared");
     }
   }
@@ -51,7 +58,7 @@ watch(
         :class="{ invalid: invalidFields.includes(field) }"
       />
     </div>
-    <div v-if="['oldPassword','password', 'passwordRepeat'].includes(field)">
+    <div v-if="['oldPassword', 'password', 'passwordRepeat'].includes(field)">
       <label :for="field">{{ $t("inputFields." + field + ".label") }}</label>
       <br />
       <input
