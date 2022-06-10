@@ -119,24 +119,3 @@ export const useStore = defineStore({
     },
   },
 });
-
-export type SearchQuery = Partial<
-  BaseUser & { page: string; index: string; sortby: keyof BaseUser; DESC: null }
->;
-
-export type BaseUser = {
-  email: string;
-  name: string;
-  postcode: string;
-  city: string;
-  phone: string;
-};
-export type ID = { id: number };
-
-export type SearchResult = BaseUser & ID;
-
-export type User = BaseUser & {
-  password: string;
-};
-
-export type UserWithID = User & ID;

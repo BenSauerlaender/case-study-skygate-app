@@ -1,9 +1,3 @@
-import type {
-  SearchQuery,
-  SearchResult,
-  User,
-  UserWithID,
-} from "@/stores/store";
 import axios from "axios";
 import {
   BadPasswordError,
@@ -13,256 +7,191 @@ import {
   NoUserError,
 } from "./errors";
 
+/**
+ * A collection of functions to communicate with the backend-api via axios.
+ */
+
+export type ContactData = {
+  name: string;
+  postcode: string;
+  city: string;
+  phone: string;
+};
+
+export type ID = { id: number };
+export type Password = { password: string };
+export type Email = { email: string };
+
+export type PublicUser = ContactData & ID & Email;
+
+export type PrivateUser = PublicUser & Password;
+
+export type SearchQuery = Partial<
+  ContactData &
+    Email & {
+      page: string;
+      index: string;
+      sortby: keyof ContactData | keyof Email;
+      DESC: null;
+    }
+>;
+
+//The Base URL, where the backend is reachable
 const API_URL = "http://localhost:3000/api/v1";
 
-async function sendRegistration(props: User): Promise<void> {
-  try {
-    await axios.post(API_URL + "/register", props);
-    return;
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 400) {
-        const data = err.response.data;
-        if (data.errorCode === 102) {
-          throw new InvalidPropsError("", data.invalidProperties);
-        }
-      }
-    }
-    throw new ConnectionError();
-  }
+//registers a new user
+async function sendRegistration(props: PrivateUser): Promise<void> {
+  await axios.post(API_URL + "/register", props).catch(handleError);
 }
 
+//gets an refreshTokenCookie by sending email and password
 async function sendLogin(email: string, password: string): Promise<void> {
-  try {
-    await axios.post(
-      API_URL + "/login",
-      { email: email, password: password },
-      { withCredentials: true }
-    );
-    return;
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 400) {
-        const errorCode = err.response.data.errorCode;
-        if (errorCode === 201) {
-          throw new InvalidPropsError("noUser");
-        }
-        if (errorCode === 215) {
-          throw new InvalidPropsError("wrongPassword");
-        }
-      }
-    }
-    throw new ConnectionError();
-  }
+  await axios
+    .post(API_URL + "/login", { email: email, password: password })
+    .catch(handleError);
 }
 
+//gets a new accessToken by sending the refreshTokenCookie
 async function getToken(): Promise<string> {
-  return (await axios.get(API_URL + "/token")).data.accessToken as string;
+  const response = await axios.get(API_URL + "/token").catch(handleError);
+  return response.data.accessToken as string;
 }
 
-async function getUser(userID: number, token: string): Promise<UserWithID> {
-  try {
-    const user: User = (
-      await axios.get(API_URL + `/users/${userID}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-    ).data;
-    return { ...user, id: userID };
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 400) {
-        const data = err.response.data;
-        if (data.errorCode === 201) {
-          throw new NoUserError();
-        }
-      }
-    }
-    throw new ConnectionError();
-  }
+//gets a users data by specifying its id.
+async function getUser(userID: number, token: string): Promise<PublicUser> {
+  const response = await axios
+    .get(API_URL + `/users/${userID}`, withAccessToken(token))
+    .catch(handleError);
+  return { ...response.data, id: userID };
 }
-async function updateUser(
+
+//updates a users contact data
+async function updateUsersContactData(
   userID: number,
-  data: Partial<User>,
+  data: Partial<ContactData>,
   token: string
 ): Promise<void> {
-  try {
-    await axios.put(API_URL + `/users/${userID}`, data, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 400) {
-        const data = err.response.data;
-        if (data.errorCode === 102) {
-          throw new InvalidPropsError("", data.invalidProperties);
-        }
-      }
-    }
-    throw new ConnectionError();
-  }
+  await axios
+    .put(API_URL + `/users/${userID}`, data, withAccessToken(token))
+    .catch(handleError);
 }
 
-async function updateEmail(
+//updates a users email address
+async function updateUsersEmail(
   userID: number,
   email: string,
   token: string
 ): Promise<void> {
-  try {
-    await axios.post(
+  await axios
+    .post(
       API_URL + `/users/${userID}/emailChange`,
       { email: email },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 400) {
-        const data = err.response.data;
-        if (data.errorCode === 102) {
-          throw new InvalidPropsError("", data.invalidProperties);
-        }
-      }
-    }
-    throw new ConnectionError();
-  }
+      withAccessToken(token)
+    )
+    .catch(handleError);
 }
 
-async function updatePassword(
+//updates a users password
+async function updateUsersPassword(
   userID: number,
   oldPassword: string,
   newPassword: string,
   token: string
 ): Promise<void> {
-  try {
-    await axios.put(
+  await axios
+    .put(
       API_URL + `/users/${userID}/password`,
       { oldPassword: oldPassword, newPassword: newPassword },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 400) {
-        const data = err.response.data;
-        if (data.errorCode === 215) {
-          throw new BadPasswordError();
-        } else if (data.errorCode === 102) {
-          throw new InvalidPropsError("", data.invalidProperties);
-        }
-      }
-    }
-    throw new ConnectionError();
-  }
+      withAccessToken(token)
+    )
+    .catch(handleError);
 }
+
+//permanently deletes a user
 async function deleteUser(userID: number, token: string): Promise<void> {
-  try {
-    await axios.delete(API_URL + `/users/${userID}`, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
-  } catch (err: any) {
-    throw new ConnectionError();
-  }
+  await axios
+    .delete(API_URL + `/users/${userID}`, withAccessToken(token))
+    .catch(handleError);
 }
-async function sendLogout(userID: number, token: string): Promise<void> {
-  try {
-    await axios.post(
-      API_URL + `/users/${userID}/logout`,
-      {},
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-    return;
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 400) {
-        const data = err.response.data;
-        if (data.errorCode === 102) {
-          throw new InvalidPropsError("", data.invalidProperties);
-        }
-      }
-    }
-    throw new ConnectionError();
-  }
+
+//makes the current refreshTokenCookie invalid
+async function logoutUser(userID: number, token: string): Promise<void> {
+  await axios
+    .post(API_URL + `/users/${userID}/logout`, {}, withAccessToken(token))
+    .catch(handleError);
 }
+
+//gets all users found by the specified query
 async function getSearchResults(
   query: SearchQuery,
   token: string
-): Promise<Array<SearchResult>> {
-  try {
-    const q: any = { ...query };
-    if (query.DESC === null) {
-      q.DESC = "";
-    }
-    return (
-      await axios.get(API_URL + `/users`, {
-        params: q,
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-    ).data;
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 400) {
-        const data = err.response.data;
-        if (data.errorCode === 111) {
-          throw new InvalidSearchError();
-        }
-      }
-    }
-    throw new ConnectionError();
+): Promise<Array<PublicUser>> {
+  //need to change null to '' because axios cant send null.
+  const fixedQuery: any = { ...query };
+  if (query.DESC === null) {
+    fixedQuery.DESC = "";
   }
+
+  const response = await axios
+    .get(API_URL + `/users`, {
+      params: fixedQuery,
+      ...withAccessToken(token),
+    })
+    .catch(handleError);
+
+  return response.data;
 }
+
+//gets only the number of users that would be returned by getSearchResults with the same query
 async function getSearchLength(
   query: SearchQuery,
   token: string
 ): Promise<number> {
-  try {
-    return (
-      await axios.get(API_URL + `/users/length`, {
-        params: query,
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-    ).data.length;
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 400) {
-        const data = err.response.data;
-        if (data.errorCode === 111) {
-          throw new InvalidSearchError();
-        }
+  const response = await axios
+    .get(API_URL + `/users/length`, {
+      params: query,
+      ...withAccessToken(token),
+    })
+    .catch(handleError);
+  return response.data.length;
+}
+
+//wraps the accessToken in an axios config object
+const withAccessToken = (token: string) => {
+  return {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  };
+};
+
+const handleError = (error: any) => {
+  if (error.response) {
+    if (error.response.status === 400) {
+      const data = error.response.data;
+      if (data.errorCode === 102) {
+        throw new InvalidPropsError("", data.invalidProperties);
+      } else if (data.errorCode === 111) {
+        throw new InvalidSearchError();
+      } else if (data.errorCode === 201) {
+        throw new NoUserError();
+      } else if (data.errorCode === 215) {
+        throw new BadPasswordError();
       }
     }
-    throw new ConnectionError();
   }
-}
+  throw new ConnectionError();
+};
 
 export const api = {
   sendRegistration,
   sendLogin,
   getToken,
-  sendLogout,
+  logoutUser,
   getUser,
-  updateUser,
-  updateEmail,
-  updatePassword,
+  updateUsersContactData,
+  updateUsersEmail,
+  updateUsersPassword,
   getSearchLength,
   getSearchResults,
   deleteUser,
