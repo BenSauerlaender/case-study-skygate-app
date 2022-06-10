@@ -5,6 +5,7 @@ import {
   InvalidPropsError,
   InvalidSearchError,
   NoUserError,
+  UserNotLoggedInError,
 } from "./errors";
 
 /**
@@ -19,8 +20,8 @@ export type ContactData = {
 };
 
 export type ID = { id: number };
-export type Password = { password: string };
 export type Email = { email: string };
+export type Password = { password: string };
 
 export type PublicUser = ContactData & ID & Email;
 
@@ -158,6 +159,7 @@ async function getSearchLength(
 
 //wraps the accessToken in an axios config object
 const withAccessToken = (token: string) => {
+  if (token === "") throw new UserNotLoggedInError();
   return {
     headers: {
       Authorization: "Bearer " + token,
@@ -178,6 +180,8 @@ const handleError = (error: any) => {
       } else if (data.errorCode === 215) {
         throw new BadPasswordError();
       }
+    } else if (error.response.status === 401) {
+      throw new UserNotLoggedInError();
     }
   }
   throw new ConnectionError();

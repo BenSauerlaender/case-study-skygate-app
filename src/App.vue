@@ -2,6 +2,7 @@
 import { RouterView } from "vue-router";
 import Footer from "@/components/Footer.vue";
 import Header from "@/components/Header.vue";
+import TheLogoutHandler from "./components/TheLogoutHandler.vue";
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import Header from "@/components/Header.vue";
     <RouterView />
   </main>
   <Footer />
+  <TheLogoutHandler />
 </template>
 
 <style>

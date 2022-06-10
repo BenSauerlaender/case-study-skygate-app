@@ -1,4 +1,4 @@
-import type { User } from "@/stores/store";
+import type { PrivateUser } from "./apiCalls";
 
 export class ConnectionError extends Error {
   constructor(msg: string = "") {
@@ -36,8 +36,17 @@ export class BadPasswordError extends Error {
   }
 }
 
+export class UserNotLoggedInError extends Error {
+  constructor(msg: string = "") {
+    super(msg);
+
+    // Set the prototype explicitly.
+    Object.setPrototypeOf(this, UserNotLoggedInError.prototype);
+  }
+}
+
 export class InvalidPropsError extends Error {
-  invalidProps: Map<keyof User, string[]> = new Map();
+  invalidProps: Map<keyof PrivateUser, string[]> = new Map();
   constructor(
     msg: string = "",
     props: { [index: string]: Array<string> } = {}
@@ -48,7 +57,7 @@ export class InvalidPropsError extends Error {
     Object.setPrototypeOf(this, InvalidPropsError.prototype);
 
     Object.keys(props).forEach((key) => {
-      this.invalidProps.set(key as keyof User, props[key]);
+      this.invalidProps.set(key as keyof PrivateUser, props[key]);
     });
   }
 }

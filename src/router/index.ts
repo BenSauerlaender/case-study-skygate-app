@@ -15,6 +15,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      //'homepage' is either profile or login
       path: "/",
       redirect: (to) => {
         const store = useStore();
@@ -42,10 +43,12 @@ const router = createRouter({
       component: TermsOfUseView,
     },
     {
+      //show simple message after the email was changed successful
       path: "/email-changed",
       component: EmailChangedView,
     },
     {
+      //show simple message after the password was changed successful
       path: "/password-changed",
       component: PasswordChangedView,
     },
@@ -74,6 +77,7 @@ const router = createRouter({
   ],
 });
 
+//ensures that specific sites are only accessible if the user is logged in
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresLogin)) {
     const store = useStore();
