@@ -20,9 +20,6 @@ const deleteUser = () => {
       .deleteUser(props.userID)
       .then(() => {
         error.value = null;
-        if (props.userID === store.user?.id) {
-          store.logoutUser();
-        }
         emit("userChanged");
       })
       .catch(() => {

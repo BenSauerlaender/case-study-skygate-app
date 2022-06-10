@@ -108,7 +108,14 @@ export const useStore = defineStore({
       return await api.getSearchResults(query, this.accessToken!);
     },
     async deleteUser(id: number): Promise<void> {
-      return await api.deleteUser(id, this.accessToken!);
+      await api.deleteUser(id, this.accessToken!);
+      if (id === this.accessTokenPayload?.id) {
+        if (this.accessTokenAutoRefreshTimeout) {
+          clearTimeout(this.accessTokenAutoRefreshTimeout);
+        }
+        this.accessToken = null;
+        this.user = null;
+      }
     },
   },
 });

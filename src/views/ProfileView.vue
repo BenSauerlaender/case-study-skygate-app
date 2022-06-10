@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useStore } from "@/stores/store";
 import { storeToRefs } from "pinia";
+import { watch } from "vue";
 import { useRouter } from "vue-router";
 import UserShowcase from "../components/UserShowcase.vue";
 
@@ -11,6 +12,13 @@ if (user.value === null) {
 }
 const router = useRouter();
 const logout = () => store.logoutUser().then(() => router.push("/login"));
+
+watch(
+  () => user.value,
+  () => {
+    store.fetchUser().catch(() => router.push("/"));
+  }
+);
 </script>
 
 <template>

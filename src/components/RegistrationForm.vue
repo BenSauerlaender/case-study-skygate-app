@@ -29,7 +29,7 @@ const register = (inputs: Partial<FormInputs> | null) => {
     validationErrorMessageMap.value = new Map();
   } else {
     if (apiResponseStatus.value === "pending") return;
-
+    emailSendTo.value = inputs.email!;
     validationErrorMessageMap.value = new Map();
     apiResponseStatus.value = "pending";
 
@@ -37,7 +37,6 @@ const register = (inputs: Partial<FormInputs> | null) => {
       .registerUser(inputs as User)
       .then(() => {
         apiResponseStatus.value = "successful";
-        emailSendTo.value = inputs.email!;
       })
       .catch((err) => {
         if (err instanceof InvalidPropsError) {
