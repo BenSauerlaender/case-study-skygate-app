@@ -4,18 +4,20 @@ import Footer from "@/components/Footer.vue";
 import Header from "@/components/Header.vue";
 import TheLogoutHandler from "./components/TheLogoutHandler.vue";
 </script>
-
+<!-- simple header-content-footer layout -->
 <template>
   <Header />
   <main>
     <RouterView />
   </main>
   <Footer />
+  <!-- plus one headless utility component -->
   <TheLogoutHandler />
 </template>
 
 <style>
 @import "@/assets/base.css";
+
 #app {
   margin: 0 auto;
   font-weight: normal;

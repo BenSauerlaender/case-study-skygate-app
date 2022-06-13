@@ -1,5 +1,6 @@
 <script setup lang="ts"></script>
 
+<!-- placeholder site-->
 <template>
   <h1 class="heading">{{ $t("sites.privacy.name") }}</h1>
 </template>

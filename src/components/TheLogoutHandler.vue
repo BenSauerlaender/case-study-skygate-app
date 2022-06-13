@@ -5,8 +5,8 @@ import { useRouter } from "vue-router";
 
 /**
  * Its an Component that just watches the logged in/out state and redirect to /login if the user was logged out.
- *
  */
+
 const store = useStore();
 const router = useRouter();
 
