@@ -190,7 +190,7 @@ function updateQuery() {
     </select>
   </div>
   <div id="button-wrapper">
-    <div v-if="apiError" id="error">{{ $t(apiError) }}</div>
+    <div v-if="apiError" class="error">{{ $t(apiError) }}</div>
     <button @click="updateQuery">
       {{ $t("sites.search.buttons.search") }}
     </button>

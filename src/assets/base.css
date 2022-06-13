@@ -85,9 +85,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-#success {
+.success {
   color: var(--color-success);
 }
-#error {
+.error {
   color: var(--color-error);
 }

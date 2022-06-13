@@ -71,10 +71,10 @@ const changeEmail = (inputs: Partial<FormInputs> | null) => {
   <br />
   <br />
   <h3 v-if="apiResponseStatus === 'pending'">{{ $t("messages.loading") }}</h3>
-  <h3 id="success" v-if="apiResponseStatus === 'successful'">
+  <h3 class="success" v-if="apiResponseStatus === 'successful'">
     {{ $t("components.emailChange.messages.successful", { email: newEmail }) }}
   </h3>
-  <h3 id="error" v-if="apiResponseStatus === 'error'">
+  <h3 class="error" v-if="apiResponseStatus === 'error'">
     {{ $t("messages.ApiError") }}
   </h3>
 </template>
