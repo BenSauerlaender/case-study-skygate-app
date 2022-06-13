@@ -3,7 +3,7 @@ import { InvalidPropsError } from "@/helper/errors";
 import type { ApiResponseStatus, FormInputs } from "@/helper/types";
 import { useStore, type User, type UserWithID } from "@/stores/store";
 import { ref, toRefs, type Ref } from "vue";
-import InputForm from "./InputForm.vue";
+import InputForm from "./BaseInputForm.vue";
 
 const props = defineProps<{
   user: UserWithID;

@@ -1,26 +1,25 @@
 <script setup lang="ts">
-import { InvalidPropsError } from "@/helper/errors";
+import { NoUserError, BadPasswordError, ApiError } from "@/helper/errors";
 import router from "@/router";
 import { useStore } from "@/stores/store";
-import { ref } from "vue";
+import { ref, type Ref } from "vue";
 
 const store = useStore();
 
+//input refs
 const email = ref("");
 const password = ref("");
 
-const error = ref("");
+//apiError response
+const apiError: Ref<ApiError | null> = ref(null);
 
+//logs the user in and redirect to profile-page. If error occurred -> show error message
 function login(event: Event) {
   store
     .loginUser(email.value, password.value)
     .then(() => router.push("/profile"))
     .catch((err) => {
-      if (err instanceof InvalidPropsError) {
-        error.value = err.message;
-      } else {
-        error.value = "noResponse";
-      }
+      apiError.value = err;
     });
 }
 </script>
@@ -32,24 +31,27 @@ function login(event: Event) {
   <br />
   <input id="email" v-model="email" />
   <br />
+
   <!-- password field -->
   <label for="password">{{ $t("inputFields.password.label") }}</label>
   <br />
   <input type="password" id="password" v-model="password" />
   <br />
   <br />
+
   <!-- login button -->
   <button @click="login">{{ $t("sites.login.buttons.login") }}</button>
   <br />
+
   <!-- error display -->
   <div class="error">
-    <h3 v-if="error === 'noUser'">
+    <h3 v-if="apiError instanceof NoUserError">
       {{ $t("sites.login.messages.noUser") }}
     </h3>
-    <h3 v-if="error === 'wrongPassword'">
+    <h3 v-else-if="apiError instanceof BadPasswordError">
       {{ $t("sites.login.messages.wrongPassword") }}
     </h3>
-    <h3 v-if="error === 'noResponse'">
+    <h3 v-else-if="apiError instanceof ApiError">
       {{ $t("messages.ApiError") }}
     </h3>
   </div>

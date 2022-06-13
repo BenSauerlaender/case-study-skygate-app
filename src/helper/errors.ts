@@ -1,4 +1,5 @@
-import type { PrivateUser } from "./apiCalls";
+import type { PublicUser } from "./apiCalls";
+import type { FormInputs } from "./types";
 
 /**
  * Base error for all Errors that come from api communication
@@ -64,7 +65,7 @@ export class UserNotLoggedInError extends ApiError {
  * will be thrown if specified properties are invalid
  */
 export class InvalidPropsError extends ApiError {
-  invalidProps: Map<keyof PrivateUser, string[]> = new Map();
+  invalidProps: Map<keyof FormInputs, string[]> = new Map();
   constructor(
     msg: string = "",
     props: { [index: string]: Array<string> } = {}
@@ -75,7 +76,7 @@ export class InvalidPropsError extends ApiError {
     Object.setPrototypeOf(this, InvalidPropsError.prototype);
 
     Object.keys(props).forEach((key) => {
-      this.invalidProps.set(key as keyof PrivateUser, props[key]);
+      this.invalidProps.set(key as keyof FormInputs, props[key]);
     });
   }
 }

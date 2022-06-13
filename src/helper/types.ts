@@ -1,5 +1,3 @@
-export type ApiResponseStatus = "pending" | "successful" | "error" | undefined;
-
 export type FormInputs = Partial<{
   email: string;
   name: string;

@@ -1,13 +1,23 @@
 import type { FormInputs } from "./types";
 import * as EmailValidator from "email-validator";
 
+//A Map that stores a list of validators for each form input field
 export type Validators = Map<keyof FormInputs, Validator[]>;
+
+/***
+ * A Validator is a function that validates a specific aspect about a variable.
+ * If the validation is successful it returns true
+ * Otherwise a string that point to a i18n-error-message
+ */
 export type Validator = (input: any) => true | string;
 
-export function getValidators(
+//Constructs and returns a Validators map
+export function getAllValidators(
   password: string | undefined = undefined
 ): Validators {
+  //map to return
   const validators: Validators = new Map();
+
   validators.set("email", [isEmail, maxLength(99)]);
   validators.set("email", [isEmail, maxLength(99)]);
   validators.set("name", [isWords, minLength(2)]);
@@ -23,16 +33,19 @@ export function getValidators(
     containOneUpper,
     containOneLower,
   ]);
-  validators.set("readLegals", [required, isChecked]);
+  validators.set("readLegals", [isChecked]);
+
   if (password !== undefined) {
-    validators.set("passwordRepeat", [required, equals(password)]);
+    validators.set("passwordRepeat", [equals(password)]);
   }
+
   return validators;
 }
 
 const i18n_prefix = "validationErrorMessages.";
 
-export const required: Validator = (x: any): true | string => {
+//validates if a variable can be considered as 'is set'
+export const checkRequired: Validator = (x: any): true | string => {
   switch (typeof x) {
     case "string":
       if (x.length > 0) return true;
@@ -66,7 +79,7 @@ function minDigit(min: number): Validator {
   return (x: any): true | string => {
     if (typeof x === "string" && x.replace(/[^0-9]/g, "").length >= min)
       return true;
-    return i18n_prefix + `minDigit,${min}`;
+    return i18n_prefix + `minDigit.${min}`;
   };
 }
 function length(length: number): Validator {

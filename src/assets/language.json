@@ -215,7 +215,7 @@
             "needToBeNumber": "Darf ausschließlich Ziffern enthalten",
             "needToBeWords": "Darf ausschließlich Buchstaben und Leerzeichen enthalten",
             "needToBePhone": "Darf ausschließlich Ziffern und folgende Sonderzeichen (+-()/.x) enthalten",
-            "needToBePassword": "Darf ausschließlich Buchstaben, Ziffern und folgende Sonderzeichen (#?!@$%^&.*-+) enthalten",
+            "needToBePassword": "Darf ausschließlich Buchstaben, Ziffern und folgende Sonderzeichen (#?!{'@'}$%^&.*-+) enthalten",
             "containOneNumber": "Muss mindestens eine Ziffer enthalten",
             "containOneUpper": "Muss mindestens einen Großbuchstaben enthalten",
             "containOneLower": "Muss mindestens einen Kleinbuchstaben enthalten",

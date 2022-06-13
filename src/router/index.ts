@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import PrivacyView from "../views/StaticPrivacyView.vue";
-import TermsOfUseView from "../views/TheTermsOfUseView.vue";
+import TermsOfUseView from "../views/StaticTermsOfUseView.vue";
 import NotFound from "../views/StaticNotFoundView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import SearchView from "../views/SearchView.vue";
