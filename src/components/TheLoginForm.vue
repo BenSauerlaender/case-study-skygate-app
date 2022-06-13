@@ -25,19 +25,24 @@ function login(event: Event) {
 }
 </script>
 
+<!-- component that provide a email and a password input field and a login button -->
 <template>
+  <!-- email field -->
   <label for="email">{{ $t("inputFields.email.label") }}</label>
   <br />
   <input id="email" v-model="email" />
   <br />
+  <!-- password field -->
   <label for="password">{{ $t("inputFields.password.label") }}</label>
   <br />
   <input type="password" id="password" v-model="password" />
   <br />
   <br />
+  <!-- login button -->
   <button @click="login">{{ $t("sites.login.buttons.login") }}</button>
   <br />
-  <div id="error">
+  <!-- error display -->
+  <div class="error">
     <h3 v-if="error === 'noUser'">
       {{ $t("sites.login.messages.noUser") }}
     </h3>

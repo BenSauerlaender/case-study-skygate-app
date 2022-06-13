@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LoginForm from "@/components/LoginForm.vue";
+import LoginForm from "@/components/TheLoginForm.vue";
 import { useStore } from "@/stores/store";
 import { storeToRefs } from "pinia";
 import { RouterLink } from "vue-router";
