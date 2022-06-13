@@ -84,3 +84,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+#success {
+  color: var(--color-success);
+}
+#error {
+  color: var(--color-error);
+}

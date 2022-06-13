@@ -87,11 +87,4 @@ const changeData = (inputs: Partial<FormInputs> | null) => {
     {{ $t("messages.ApiError") }}
   </h3>
 </template>
-<style scoped>
-#success {
-  color: var(--color-success);
-}
-#error {
-  color: var(--color-error);
-}
-</style>
+<style scoped></style>

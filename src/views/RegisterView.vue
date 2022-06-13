@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import Form from "@/components/RegistrationForm.vue";
+import RegisterForm from "@/components/RegistrationForm.vue";
 </script>
 
+<!-- page with register form, to let the user register + link to login-page -->
 <template>
   <h1 class="heading">{{ $t("sites.register.name") }}</h1>
 
-  <Form />
+  <RegisterForm />
   <br />
 
   <RouterLink to="/login">{{

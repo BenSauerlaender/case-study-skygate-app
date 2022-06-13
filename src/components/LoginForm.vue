@@ -49,8 +49,4 @@ function login(event: Event) {
     </h3>
   </div>
 </template>
-<style scoped>
-#error {
-  color: var(--color-error);
-}
-</style>
+<style scoped></style>

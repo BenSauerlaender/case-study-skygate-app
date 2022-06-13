@@ -37,8 +37,4 @@ const deleteUser = () => {
     {{ $t("messages.ApiError") }}
   </h3>
 </template>
-<style scoped>
-#error {
-  color: var(--color-error);
-}
-</style>
+<style scoped></style>

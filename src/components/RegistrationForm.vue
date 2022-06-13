@@ -89,11 +89,4 @@ const register = (inputs: Partial<FormInputs> | null) => {
   </h3>
 </template>
 
-<style scoped>
-#success {
-  color: var(--color-success);
-}
-#error {
-  color: var(--color-error);
-}
-</style>
+<style scoped></style>

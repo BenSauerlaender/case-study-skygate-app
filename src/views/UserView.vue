@@ -1,56 +1,55 @@
 <script setup lang="ts">
-import { useStore, type User, type UserWithID } from "@/stores/store";
+import { useStore } from "@/stores/store";
 import { NoUserError } from "@/helper/errors";
 import { storeToRefs } from "pinia";
 import { computed, ref, watchEffect, type Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import UserShowcase from "../components/UserShowcase.vue";
+import type { PublicUser } from "@/helper/apiCalls";
 
 const store = useStore();
 
 const route = useRoute();
 const router = useRouter();
-const user: Ref<null | UserWithID> = ref(null);
+const user: Ref<null | PublicUser> = ref(null);
 
 const { isAdmin } = storeToRefs(store);
 
-const userChanged = () => {
-  getUser();
-};
+//get the user id as number from the url
+const requestedUserID = computed(() =>
+  parseInt(
+    typeof route.params.id === "string" ? route.params.id : route.params.id[0]
+  )
+);
 
-const getUser = async () => {
+//watch the requestedUserId and redirect to profile if its the logged in user
+watchEffect(async () => {
+  if (!route.path.startsWith("/user")) return;
+  if (store.accessTokenPayload!.id === requestedUserID.value) {
+    router.replace("/profile");
+    return;
+  } else {
+    fetchUser();
+  }
+});
+
+//fetch the requested user from the api
+const fetchUser = async () => {
   store
-    .getUser(userID.value)
+    .getUser(requestedUserID.value)
     .then((u) => {
       user.value = u;
     })
+    //redirect to 404 if no user found
     .catch((err) => {
       if (err instanceof NoUserError) {
         router.replace("/404");
       }
     });
 };
-
-const userID = computed(() =>
-  parseInt(
-    typeof route.params.id === "string" ? route.params.id : route.params.id[0]
-  )
-);
-
-watchEffect(async () => {
-  if (!route.path.startsWith("/user")) return;
-  if (store.accessTokenPayload!.id === userID.value) {
-    router.replace("/profile");
-    return;
-  } else {
-    getUser();
-  }
-});
-
-if (user.value === null) {
-}
 </script>
 
+<!-- page, to show a specific user's data + possibility for admins to change the data-->
 <template>
   <h1 class="heading">{{ $t("sites.user.name") }}</h1>
   <br />
@@ -58,7 +57,7 @@ if (user.value === null) {
     v-if="user"
     :user="user"
     :editable="isAdmin ?? false"
-    @user-changed="userChanged"
+    @user-changed="fetchUser"
   />
 </template>
 <style scoped></style>

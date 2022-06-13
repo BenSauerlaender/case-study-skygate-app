@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Form from "@/components/LoginForm.vue";
+import LoginForm from "@/components/LoginForm.vue";
 import { useStore } from "@/stores/store";
 import { storeToRefs } from "pinia";
 import { RouterLink } from "vue-router";
@@ -8,16 +8,20 @@ const store = useStore();
 const { loggedIn } = storeToRefs(store);
 </script>
 
+<!-- page with log in form, to let the user log in + link to register-page -->
 <template>
   <h1 class="heading">{{ $t("sites.login.name") }}</h1>
   <br />
   <div v-if="loggedIn === false">
-    <Form />
+    <!-- The main component  -->
+    <LoginForm />
     <br />
+    <!-- Link to register  -->
     <RouterLink to="/register">{{
       $t("sites.login.links.noAccount")
     }}</RouterLink>
   </div>
+  <!--If user is already logged in -> tell they and offer to log out -->
   <div v-else-if="loggedIn === true">
     <h3>{{ $t("sites.login.messages.alreadyLoggedIn") }}</h3>
     <button @click="store.logoutUser">
@@ -25,8 +29,5 @@ const { loggedIn } = storeToRefs(store);
     </button>
   </div>
 </template>
-<style scoped>
-#error {
-  color: var(--color-error);
-}
-</style>
+
+<style scoped></style>

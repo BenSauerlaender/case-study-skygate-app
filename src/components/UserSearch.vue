@@ -215,11 +215,6 @@ function updateQuery() {
   </div>
 </template>
 <style scoped>
-#error {
-  text-align: center;
-
-  color: var(--color-error);
-}
 button {
   margin-left: auto;
   margin-right: auto;

@@ -5,22 +5,17 @@ import { watch } from "vue";
 import { useRouter } from "vue-router";
 import UserShowcase from "../components/UserShowcase.vue";
 
+const router = useRouter(); //used in template
 const store = useStore();
-const { user } = storeToRefs(store);
+const user = storeToRefs(store).loggedInUser;
+
+//if the loggedInUser data not fetch yet -> fetch it
 if (user.value === null) {
   store.fetchUser();
 }
-const router = useRouter();
-const logout = () => store.logoutUser().then(() => router.push("/login"));
-
-watch(
-  () => user.value,
-  () => {
-    store.fetchUser().catch(() => router.push("/"));
-  }
-);
 </script>
 
+<!-- page, to show the logged in user they data + possibility to change the data + logout button -->
 <template>
   <h1 class="heading">{{ $t("sites.profile.name") }}</h1>
   <br />
@@ -32,7 +27,7 @@ watch(
   />
   <br />
   <br />
-  <button @click="logout">
+  <button @click="store.logoutUser">
     {{ $t("sites.login.buttons.logout") }}
   </button>
 </template>
