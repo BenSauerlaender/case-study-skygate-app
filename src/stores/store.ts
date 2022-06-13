@@ -6,24 +6,29 @@ import {
   type PublicUser,
   type SearchQuery,
 } from "@/helper/apiCalls";
-import { UserNotLoggedInError } from "@/helper/errors";
 
 export const useStore = defineStore({
   id: "store",
   state: () => ({
+    //jwt to get authenticate to the api, or "" if the user is not logged in
     accessToken: "",
+    //magic stuff that refreshes the accessToken
     accessTokenAutoRefreshTimeout: null as null | number,
+    //all the user's data, or null if it is not logged in
     loggedInUser: null as PublicUser | null,
   }),
   getters: {
+    //check if user is logged in
     loggedIn(): boolean {
       return this.accessToken !== "";
     },
+    //check if user has admin permissions
     isAdmin(): boolean {
       return (
         this.accessTokenPayload?.perm.includes("user:{all}:{all}") ?? false
       );
     },
+    //get the accessToken jwt-payload (userID (id), seconds until expiration (exp), users permissions (perm))
     accessTokenPayload():
       | { id: number; exp: number; perm: string }
       | undefined {
@@ -140,6 +145,8 @@ export const useStore = defineStore({
     async getSearchResults(query: SearchQuery): Promise<Array<PublicUser>> {
       return await api.getSearchResults(query, this.accessToken!);
     },
+
+    //delete a user, if its the logged in user -> log out.
     async deleteUser(id: number): Promise<void> {
       await api.deleteUser(id, this.accessToken!);
       if (id === this.accessTokenPayload?.id) {

@@ -6,5 +6,4 @@ const store = useStore();
 
 <template>
   <h1 class="heading">{{ $t("sites.termsOfUse.name") }}</h1>
-  <button @click="store.fetchUser">test</button>
 </template>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import {
   BadPasswordError,
-  ConnectionError,
+  ApiError,
   InvalidPropsError,
   InvalidSearchError,
   NoUserError,
@@ -184,7 +184,7 @@ const handleError = (error: any) => {
       throw new UserNotLoggedInError();
     }
   }
-  throw new ConnectionError();
+  throw new ApiError();
 };
 
 export const api = {

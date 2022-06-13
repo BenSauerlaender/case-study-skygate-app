@@ -1,15 +1,21 @@
 import type { PrivateUser } from "./apiCalls";
 
-export class ConnectionError extends Error {
+/**
+ * Base error for all Errors that come from api communication
+ */
+export class ApiError extends Error {
   constructor(msg: string = "") {
     super(msg);
 
     // Set the prototype explicitly.
-    Object.setPrototypeOf(this, ConnectionError.prototype);
+    Object.setPrototypeOf(this, ApiError.prototype);
   }
 }
 
-export class InvalidSearchError extends Error {
+/**
+ * Will be thrown if the search query is invalid
+ */
+export class InvalidSearchError extends ApiError {
   constructor(msg: string = "") {
     super(msg);
 
@@ -18,7 +24,10 @@ export class InvalidSearchError extends Error {
   }
 }
 
-export class NoUserError extends Error {
+/**
+ * Will be thrown if specified user cant be found
+ */
+export class NoUserError extends ApiError {
   constructor(msg: string = "") {
     super(msg);
 
@@ -27,7 +36,10 @@ export class NoUserError extends Error {
   }
 }
 
-export class BadPasswordError extends Error {
+/**
+ * Will be thrown if the specified password is wrong
+ */
+export class BadPasswordError extends ApiError {
   constructor(msg: string = "") {
     super(msg);
 
@@ -36,7 +48,10 @@ export class BadPasswordError extends Error {
   }
 }
 
-export class UserNotLoggedInError extends Error {
+/**
+ * will be thrown if the accessToken is not valid
+ */
+export class UserNotLoggedInError extends ApiError {
   constructor(msg: string = "") {
     super(msg);
 
@@ -45,7 +60,10 @@ export class UserNotLoggedInError extends Error {
   }
 }
 
-export class InvalidPropsError extends Error {
+/**
+ * will be thrown if specified properties are invalid
+ */
+export class InvalidPropsError extends ApiError {
   invalidProps: Map<keyof PrivateUser, string[]> = new Map();
   constructor(
     msg: string = "",

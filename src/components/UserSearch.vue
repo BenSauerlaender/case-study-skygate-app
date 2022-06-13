@@ -84,7 +84,7 @@ function executeSearch(query: LocationQuery): void {
       if (error instanceof InvalidSearchError) {
         apiError.value = "sites.search.messages.invalidSearch";
       } else {
-        apiError.value = "messages.connectionError";
+        apiError.value = "messages.ApiError";
       }
     });
 }

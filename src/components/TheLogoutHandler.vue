@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useStore } from "@/stores/store";
-import { UserNotLoggedInError } from "@/helper/errors";
 import { watch } from "vue";
 import { useRouter } from "vue-router";
 

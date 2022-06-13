@@ -85,7 +85,7 @@ const register = (inputs: Partial<FormInputs> | null) => {
     {{ $t("sites.register.messages.successful", { email: emailSendTo }) }}
   </h3>
   <h3 id="error" v-if="apiResponseStatus === 'error'">
-    {{ $t("messages.connectionError") }}
+    {{ $t("messages.ApiError") }}
   </h3>
 </template>
 

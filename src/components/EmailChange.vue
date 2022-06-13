@@ -75,7 +75,7 @@ const changeEmail = (inputs: Partial<FormInputs> | null) => {
     {{ $t("components.emailChange.messages.successful", { email: newEmail }) }}
   </h3>
   <h3 id="error" v-if="apiResponseStatus === 'error'">
-    {{ $t("messages.connectionError") }}
+    {{ $t("messages.ApiError") }}
   </h3>
 </template>
 <style scoped>

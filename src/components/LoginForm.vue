@@ -45,7 +45,7 @@ function login(event: Event) {
       {{ $t("sites.login.messages.wrongPassword") }}
     </h3>
     <h3 v-if="error === 'noResponse'">
-      {{ $t("messages.connectionError") }}
+      {{ $t("messages.ApiError") }}
     </h3>
   </div>
 </template>

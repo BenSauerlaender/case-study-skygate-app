@@ -34,7 +34,7 @@ const deleteUser = () => {
     {{ $t("components.deleteUser.buttons.delete") }}
   </button>
   <h3 id="error" v-if="error">
-    {{ $t("messages.connectionError") }}
+    {{ $t("messages.ApiError") }}
   </h3>
 </template>
 <style scoped>

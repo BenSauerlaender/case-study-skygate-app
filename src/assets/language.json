@@ -224,7 +224,7 @@
         },
         "messages": {
             "loading": "loading...",
-            "connectionError": "Es gibt ein Problem mit der Server-verbindung. Bitte versuche es später erneut!"
+            "ApiError": "Es gibt ein Problem mit der Server-verbindung. Bitte versuche es später erneut!"
         }
     }
 }
