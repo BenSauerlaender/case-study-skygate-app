@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import RegisterForm from "@/components/RegistrationForm.vue";
+import RegisterForm from "@/components/TheRegistrationForm.vue";
 </script>
 
 <!-- page with register form, to let the user register + link to login-page -->

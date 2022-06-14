@@ -5,9 +5,8 @@ import PrivacyView from "../views/StaticPrivacyView.vue";
 import TermsOfUseView from "../views/StaticTermsOfUseView.vue";
 import NotFound from "../views/StaticNotFoundView.vue";
 import ProfileView from "../views/ProfileView.vue";
-import SearchView from "../views/SearchView.vue";
+import SearchView from "../views/SearchUsersView.vue";
 import UserView from "../views/UserView.vue";
-import PasswordChangedView from "../views/StaticPasswordChangedView.vue";
 import EmailChangedView from "../views/StaticEmailChangedView.vue";
 import { useStore } from "@/stores/store";
 
@@ -46,11 +45,6 @@ const router = createRouter({
       //show simple message after the email was changed successful
       path: "/email-changed",
       component: EmailChangedView,
-    },
-    {
-      //show simple message after the password was changed successful
-      path: "/password-changed",
-      component: PasswordChangedView,
     },
     {
       path: "/search",

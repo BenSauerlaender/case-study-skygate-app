@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-import Footer from "@/components/Footer.vue";
-import Header from "@/components/Header.vue";
+import TheFooter from "@/components/TheFooter.vue";
+import TheHeader from "@/components/TheHeader.vue";
 import TheLogoutHandler from "./components/TheLogoutHandler.vue";
 </script>
 <!-- simple header-content-footer layout -->
 <template>
-  <Header />
+  <TheHeader />
   <main>
     <RouterView />
   </main>
-  <Footer />
+  <TheFooter />
   <!-- plus one headless utility component -->
   <TheLogoutHandler />
 </template>

@@ -21,18 +21,16 @@ const changePassword = (inputs: Partial<FormInputs>) =>
     });
 
 const hasChanged = () => {
+  //if its the logged in user -> logout
   if (props.userID === store.loggedInUser!.id) {
     setTimeout(() => {
       store.logoutUser();
-      router
-        .push("/password-changed")
-        .then((x) => {})
-        .catch(console.log);
     }, 1000);
   }
 };
 </script>
 
+<!-- Component to change a users password-->
 <template>
   <InputForm
     :defaultFields="{

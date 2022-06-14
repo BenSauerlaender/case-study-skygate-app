@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { useStore } from "@/stores/store";
 import { storeToRefs } from "pinia";
-import { watch } from "vue";
 import { useRouter } from "vue-router";
-import UserShowcase from "../components/UserShowcase.vue";
+import User from "../components/User.vue";
 
 const router = useRouter(); //used in template
 const store = useStore();
@@ -19,7 +18,7 @@ if (user.value === null) {
 <template>
   <h1 class="heading">{{ $t("sites.profile.name") }}</h1>
   <br />
-  <UserShowcase
+  <User
     v-if="user"
     :user="user"
     :editable="true"

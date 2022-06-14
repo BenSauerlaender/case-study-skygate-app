@@ -4,7 +4,7 @@ import { NoUserError } from "@/helper/errors";
 import { storeToRefs } from "pinia";
 import { computed, ref, watchEffect, type Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import UserShowcase from "../components/UserShowcase.vue";
+import User from "../components/User.vue";
 import type { PublicUser } from "@/helper/apiCalls";
 
 const store = useStore();
@@ -22,17 +22,6 @@ const requestedUserID = computed(() =>
   )
 );
 
-//watch the requestedUserId and redirect to profile if its the logged in user
-watchEffect(async () => {
-  if (!route.path.startsWith("/user")) return;
-  if (store.accessTokenPayload!.id === requestedUserID.value) {
-    router.replace("/profile");
-    return;
-  } else {
-    fetchUser();
-  }
-});
-
 //fetch the requested user from the api
 const fetchUser = async () => {
   store
@@ -47,13 +36,24 @@ const fetchUser = async () => {
       }
     });
 };
+
+//watch the requestedUserId and redirect to profile if its the logged in user
+watchEffect(async () => {
+  if (!route.path.startsWith("/user")) return;
+  if (store.accessTokenPayload!.id === requestedUserID.value) {
+    router.replace("/profile");
+    return;
+  } else {
+    fetchUser();
+  }
+});
 </script>
 
 <!-- page, to show a specific user's data + possibility for admins to change the data-->
 <template>
   <h1 class="heading">{{ $t("sites.user.name") }}</h1>
   <br />
-  <UserShowcase
+  <User
     v-if="user"
     :user="user"
     :editable="isAdmin ?? false"

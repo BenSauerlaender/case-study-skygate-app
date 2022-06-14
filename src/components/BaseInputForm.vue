@@ -88,6 +88,7 @@ const onGetInputs = (inputs: FormInputs) => {
   validators.forEach((validators, field) => {
     //if a required field is missing: skip
     if (missingFields.includes(field)) return;
+    if (!Object.keys(inputsCopy).includes(field)) return;
     validators.forEach((validator) => {
       const valid = validator(inputsCopy[field]);
       //if validation fails

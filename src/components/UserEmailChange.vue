@@ -20,6 +20,7 @@ const changeEmail = (inputs: Partial<FormInputs>) =>
   });
 </script>
 
+<!-- Component to request a users email change-->
 <template>
   <InputForm
     :defaultFields="{

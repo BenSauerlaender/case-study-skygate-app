@@ -14,7 +14,10 @@ const store = useStore();
 const error: Ref<null | true> = ref(null);
 
 const { t } = useI18n();
+
+//triggered by button
 const deleteUser = () => {
+  //let the user confirm the request
   if (confirm(t("components.deleteUser.messages.confirm"))) {
     store
       .deleteUser(props.userID)
@@ -29,6 +32,7 @@ const deleteUser = () => {
 };
 </script>
 
+<!-- Component to delete the user -->
 <template>
   <button @click="deleteUser">
     {{ $t("components.deleteUser.buttons.delete") }}

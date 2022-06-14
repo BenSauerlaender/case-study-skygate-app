@@ -9,7 +9,7 @@ import { ref, watch, type Ref } from "vue";
 import { useRoute, useRouter, type LocationQuery } from "vue-router";
 import UserTable from "./UserTable.vue";
 import TablePageSelector from "./TablePageSelector.vue";
-import { InvalidSearchError } from "./../helper/errors";
+import { InvalidSearchError } from "../helper/errors";
 
 const router = useRouter();
 const route = useRoute();
