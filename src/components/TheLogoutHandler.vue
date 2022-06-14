@@ -14,7 +14,6 @@ watch(
   () => store.loggedIn,
   (now, before) => {
     if (now === false && before === true) {
-      console.log("logged out!");
       store.loggedInUser = null;
       router.push("/");
     }

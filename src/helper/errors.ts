@@ -1,4 +1,3 @@
-import type { PublicUser } from "./apiCalls";
 import type { FormInputs } from "./types";
 
 /**

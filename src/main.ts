@@ -27,9 +27,9 @@ app.use(pinia);
 const store = useStore();
 
 //try to login the user as early as possible
-await store.loginSilently();
+store.loginSilently().then(() => {
+  app.use(router);
+  app.use(i18n);
 
-app.use(router);
-app.use(i18n);
-
-app.mount("#app");
+  app.mount("#app");
+});
