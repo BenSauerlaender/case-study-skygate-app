@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted, watchEffect, type Ref } from "vue";
+import { ref, watchEffect, type Ref } from "vue";
 import { useRoute, useRouter, type LocationQuery } from "vue-router";
 import {
   contactDataKeys,
@@ -54,11 +54,7 @@ export function useSearchQuery() {
       newQuery["DESC"] = null;
     }
 
-    console.log(inputQuery);
-    console.log(newQuery);
-
     if (JSON.stringify(newQuery) != JSON.stringify(inputQuery)) {
-      console.log("do");
       router.replace({ path: route.path, query: newQuery });
     } else {
       query.value = newQuery;

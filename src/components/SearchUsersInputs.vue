@@ -5,7 +5,7 @@ import { useRoute, useRouter } from "vue-router";
 import { textInputKeys, pageSizes } from "@/helper/searchQuery";
 
 const props = defineProps<{
-  defaultQuery: SearchQuery;
+  defaultQuery: SearchQuery; //takes a (start) query as input
 }>();
 
 const query = ref(props.defaultQuery);
@@ -27,6 +27,7 @@ const search = () => {
 
   //check if the query differs from the current
   if (JSON.stringify(query) != JSON.stringify(props.defaultQuery)) {
+    //reload the page with updated query
     router.push({ path: route.path, query: query.value });
   }
 };

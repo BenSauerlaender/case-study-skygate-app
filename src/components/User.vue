@@ -5,7 +5,7 @@ import PasswordChange from "./UserPasswordChange.vue";
 import EmailChange from "./UserEmailChange.vue";
 import DeleteUser from "./UserDelete.vue";
 import { toRefs } from "vue";
-import type { PublicUser } from "@/helper/apiCalls";
+import type { PublicUser } from "@/helper/types";
 
 const props = defineProps<{
   user: PublicUser; //The user to show

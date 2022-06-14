@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { PublicUser } from "@/helper/apiCalls";
-import type { FormInputs } from "@/helper/types";
+import type { FormInputs, PublicUser } from "@/helper/types";
 import { useStore } from "@/stores/store";
 import { toRefs } from "vue";
 import { useI18n } from "vue-i18n";

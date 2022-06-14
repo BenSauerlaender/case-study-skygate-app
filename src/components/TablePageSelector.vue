@@ -1,42 +1,51 @@
 <script setup lang="ts">
-import type { SearchQuery, SearchResult } from "@/stores/store";
+import type { SearchQuery } from "@/helper/types";
 import { computed } from "@vue/reactivity";
 import { toRefs } from "vue";
 const props = defineProps<{
-  query: SearchQuery;
-  fullLength: number;
-  sitePath: string;
+  query: SearchQuery; //the current search query
+  fullResultsLength: number; //The number of users (over all pages)
+  sitePath: string; //the router-path of the current site
 }>();
-const { query, fullLength } = toRefs(props);
+const { query, fullResultsLength } = toRefs(props);
 
-const index = computed(() => {
+const pageIndex = computed(() => {
   return parseInt(query.value.index!);
 });
+
 const pageSize = computed(() => {
   return parseInt(query.value.page!);
 });
 
-const getQuery = (page: number) => {
-  const ret = { ...query.value };
-  ret.index = `${page - 1}`;
-  return ret;
-};
-
-const pages = computed(() => {
-  return Math.ceil(fullLength.value / pageSize.value);
+//the number of available pages
+const pageCount = computed(() => {
+  return Math.ceil(fullResultsLength.value / pageSize.value);
 });
+
+//function to get a copy of the current query, but with a different page
+const getQueryForPage = (page: number) => {
+  const newQuery = { ...query.value };
+  newQuery.index = `${page - 1}`; //string -> int -> string conversion
+  return newQuery;
+};
 </script>
 
+<!-- Component that provides a list of all available pages with links to these -->
 <template>
   <div>
     {{ $t("components.tablePageSelector.messages.pages") }}
-    <template v-for="num in pages">
-      <span v-if="num === index + 1" class="bold">
-        {{ num }}
+    <template v-for="pageNumber in pageCount">
+      <!-- if its the current page -> render bold and without link -->
+      <span v-if="pageNumber === pageIndex + 1" class="bold">
+        {{ pageNumber }}
       </span>
-      <RouterLink v-else :to="{ path: props.sitePath, query: getQuery(num) }">
+      <!-- otherwise -> with link -->
+      <RouterLink
+        v-else
+        :to="{ path: props.sitePath, query: getQueryForPage(pageNumber) }"
+      >
         <span>
-          {{ num }}
+          {{ pageNumber }}
         </span>
       </RouterLink>
     </template>

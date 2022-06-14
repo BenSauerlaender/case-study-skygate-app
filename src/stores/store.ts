@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
-import {
-  api,
-  type ContactData,
-  type PrivateUser,
-  type PublicUser,
-  type SearchQuery,
-} from "@/helper/apiCalls";
+import { api } from "@/helper/apiCalls";
+import type {
+  ContactData,
+  PrivateUser,
+  PublicUser,
+  SearchQuery,
+} from "@/helper/types";
 
 export const useStore = defineStore({
   id: "store",

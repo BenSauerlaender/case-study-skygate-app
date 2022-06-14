@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PublicUser } from "@/helper/apiCalls";
+import type { PublicUser } from "@/helper/types";
 import { toRefs } from "vue";
 const props = defineProps<{
   user: PublicUser;

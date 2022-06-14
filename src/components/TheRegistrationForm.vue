@@ -2,7 +2,7 @@
 import { useStore } from "@/stores/store";
 import InputForm from "./BaseInputForm.vue";
 import type { FormInputs } from "@/helper/types";
-import type { PrivateUser } from "@/helper/apiCalls";
+import type { PrivateUser } from "@/helper/types";
 import { useI18n } from "vue-i18n";
 
 const store = useStore();

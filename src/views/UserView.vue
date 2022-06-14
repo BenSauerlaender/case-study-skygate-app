@@ -5,7 +5,7 @@ import { storeToRefs } from "pinia";
 import { computed, ref, watchEffect, type Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import User from "../components/User.vue";
-import type { PublicUser } from "@/helper/apiCalls";
+import type { PublicUser } from "@/helper/types";
 
 const store = useStore();
 
