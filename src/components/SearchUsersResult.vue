@@ -1,33 +1,26 @@
 <script setup lang="ts">
 import { useStore } from "@/stores/store";
-import { ref, type Ref } from "vue";
-import { useRoute, useRouter, type LocationQuery } from "vue-router";
-import { useSearchQuery } from "@/helper/searchQuery";
+import type { SearchQuery } from "@/helper/types";
+import { ref, watch, type Ref } from "vue";
+import { useRoute, type LocationQuery } from "vue-router";
 import UserTable from "./UserTable.vue";
 import TablePageSelector from "./TablePageSelector.vue";
 import { InvalidSearchError } from "../helper/errors";
-import SearchUsersInputs from "./SearchUsersInputs.vue";
 
-const router = useRouter();
-const route = useRoute();
+const props = defineProps<{
+  query: SearchQuery;
+}>();
 
 const store = useStore();
-
-const { query } = useSearchQuery();
+const route = useRoute();
 
 const apiError: Ref<null | string> = ref(null);
 const results: Ref<null | Array<any>> = ref(null);
 const fullLength: Ref<null | number> = ref(null);
 
-function executeSearch(query: LocationQuery): void {
-  const q = checkQuery(query);
-  if (!q) return;
-
-  updateSearchFields(q);
-
+function fetchResults(query: LocationQuery): void {
   store
-    .getSearchLength(q)
-
+    .getSearchLength(query)
     .then((length) => {
       apiError.value = null;
       fullLength.value = length;
@@ -35,20 +28,12 @@ function executeSearch(query: LocationQuery): void {
       if (length === 0) {
         results.value = [];
       } else {
-        if (q.index && q.page) {
-          const intIndex = parseInt(q.index);
-          const intPage = parseInt(q.page);
-          if (isNaN(intIndex) || intIndex < 0) {
-            q.index = "0";
-            router.replace({ path: route.path, query: q });
-            return;
-          } else if (intIndex * intPage >= length) {
-            q.index = "" + (Math.ceil(length / intPage) - 1);
-            router.replace({ path: route.path, query: q });
-            return;
-          }
+        const intIndex = parseInt(query.index as string);
+        const intPage = parseInt(query.page as string);
+        if (intIndex * intPage >= length) {
+          query.index = "" + (Math.ceil(length / intPage) - 1);
         }
-        store.getSearchResults(q).then((res) => (results.value = res));
+        store.getSearchResults(query).then((res) => (results.value = res));
       }
     })
     .catch((error) => {
@@ -60,11 +45,38 @@ function executeSearch(query: LocationQuery): void {
         apiError.value = "messages.ApiError";
       }
     });
+
+  watch(
+    () => props.query,
+    (query) => {
+      if (query) {
+        fetchResults(query);
+      }
+    }
+  );
 }
 </script>
 
 <template>
-  <SearchUsersInputs v-if="query !== null" :default-query="query" />
+  <div id="result-wrapper">
+    <div v-if="apiError" class="error">{{ $t(apiError) }}</div>
+    <h1 v-if="results?.length === 0">
+      {{ $t("sites.search.messages.noResults") }}
+    </h1>
+    <template v-else-if="results">
+      <p>
+        {{
+          $t("sites.search.messages.resultsFound", { resultLength: fullLength })
+        }}
+      </p>
+      <UserTable :data="results" />
+      <TablePageSelector
+        :query="props.query"
+        :full-length="fullLength!"
+        :site-path="route.path"
+      />
+    </template>
+  </div>
 </template>
 <style scoped>
 button {

@@ -7,35 +7,16 @@ import {
   NoUserError,
   UserNotLoggedInError,
 } from "./errors";
+import type {
+  ContactData,
+  PrivateUser,
+  PublicUser,
+  SearchQuery,
+} from "./types";
 
 /**
  * A collection of functions to communicate with the backend-api via axios.
  */
-
-export type ContactData = {
-  name: string;
-  postcode: string;
-  city: string;
-  phone: string;
-};
-
-export type ID = { id: number };
-export type Email = { email: string };
-export type Password = { password: string };
-
-export type PublicUser = ContactData & ID & Email;
-
-export type PrivateUser = PublicUser & Password;
-
-export type SearchQuery = Partial<
-  ContactData &
-    Email & {
-      page: string;
-      index: string;
-      sortby: keyof ContactData | keyof Email;
-      DESC: null;
-    }
->;
 
 //The Base URL, where the backend is reachable
 const API_URL = "http://localhost:3000/api/v1";
