@@ -19,14 +19,6 @@
                     "alreadyLoggedIn": "Du bist bereits eingelogged."
                 }
             },
-            "passwordChanged": {
-                "name": "Das @:{'userProps.password.long'} wurde erfolgreich geändert",
-                "message": "Aus Sicherheitsgründen, wurdest du ausgeloggt."
-            },
-            "emailChanged": {
-                "name": "Die @:{'userProps.email.long'} wurde erfolgreich geändert",
-                "message": "Aus Sicherheitsgründen, wurdest du ausgeloggt."
-            },
             "register": {
                 "name": "Neuen Account Erstellen",
                 "buttons": {
@@ -60,6 +52,27 @@
                     "noResults": "Es konnte kein User gefunden werden.",
                     "resultsFound": "Es wurden {resultLength} User gefunden:",
                     "resultsPerPage": "Ergebnisse pro Seite: "
+                }
+            },
+            "emailChange": {
+                "name": "@:{'userProps.email.long'} ändern",
+                "message": {
+                    "successful": "Die @:{'userProps.email.long'} wurde erfolgreich geändert.",
+                    "alreadyChanged": "Die @:{'userProps.email.long'} wurde bereits geändert."
+                },
+                "links": {
+                    "login": "zur Anmeldung"
+                }
+            },
+            "verifyUser": {
+                "name": "Account bestätigen",
+                "message": {
+                    "successful": "Der Account wurde erfolgreich bestätigen.",
+                    "alreadyVerified": "Der Account wurde bereits bestätigen.",
+                    "NoUser": "Der Account konnte nicht gefunden werden."
+                },
+                "links": {
+                    "login": "zur Anmeldung"
                 }
             },
             "privacy": {

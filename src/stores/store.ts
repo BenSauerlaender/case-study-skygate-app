@@ -6,6 +6,7 @@ import type {
   PublicUser,
   SearchQuery,
 } from "@/helper/types";
+import type { LocationQueryValue } from "vue-router";
 
 export const useStore = defineStore({
   id: "store",
@@ -157,5 +158,42 @@ export const useStore = defineStore({
         this.loggedInUser = null;
       }
     },
+
+    //verifies an email change request (also parses the locationQueryValues to Ints)
+    async verifyEmailChange(
+      id: LocationQueryValue | LocationQueryValue[],
+      code: LocationQueryValue | LocationQueryValue[]
+    ): Promise<void> {
+      const userID = queryValueToInt(id);
+      await api.verifyEmailChange(userID, queryValueToInt(code));
+      //if the user whose email was changed is currently logged in -> log hin out (bc they refreshToken is now invalid anyways)
+      if (this.accessTokenPayload?.id === userID) {
+        console.log(userID);
+        await this.logoutUser();
+      }
+    },
+
+    //verifies an User (also parses the locationQueryValues to Ints)
+    async verifyUser(
+      id: LocationQueryValue | LocationQueryValue[],
+      code: LocationQueryValue | LocationQueryValue[]
+    ): Promise<void> {
+      await api.verifyUser(queryValueToInt(id), queryValueToInt(code));
+    },
   },
 });
+
+//converts a queryValue to an int or throw an error if that is not possible
+const queryValueToInt = (
+  value: LocationQueryValue | LocationQueryValue[]
+): number => {
+  let v = value;
+  if (v instanceof Array) {
+    v = v[0];
+  }
+  if (v) {
+    let num = Number.parseInt(v);
+    if (num) return num;
+  }
+  throw new Error("Query value is not parsable to int");
+};

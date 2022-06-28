@@ -6,6 +6,7 @@ import {
   InvalidSearchError,
   NoUserError,
   UserNotLoggedInError,
+  AlreadyVerifiedError,
 } from "./errors";
 import type {
   ContactData,
@@ -66,7 +67,7 @@ async function updateUsersEmail(
 ): Promise<void> {
   await axios
     .post(
-      API_URL + `/users/${userID}/emailChange`,
+      API_URL + `/users/${userID}/email-change`,
       { email: email },
       withAccessToken(token)
     )
@@ -138,6 +139,20 @@ async function getSearchLength(
   return response.data.length;
 }
 
+//verifies an emailChange request
+async function verifyEmailChange(userID: number, code: number): Promise<void> {
+  await axios
+    .post(API_URL + `/users/${userID}/email-change-verify`, { code: code })
+    .catch(handleError);
+}
+
+//verifies an User
+async function verifyUser(userID: number, code: number): Promise<void> {
+  await axios
+    .post(API_URL + `/users/${userID}/verify`, { code: code })
+    .catch(handleError);
+}
+
 //wraps the accessToken in an axios config object
 const withAccessToken = (token: string) => {
   if (token === "") throw new UserNotLoggedInError();
@@ -158,6 +173,8 @@ const handleError = (error: any) => {
         throw new InvalidSearchError();
       } else if (data.errorCode === 201) {
         throw new NoUserError();
+      } else if (data.errorCode === 210 || data.errorCode === 212) {
+        throw new AlreadyVerifiedError();
       } else if (data.errorCode === 215) {
         throw new BadPasswordError();
       }
@@ -180,4 +197,6 @@ export const api = {
   getSearchLength,
   getSearchResults,
   deleteUser,
+  verifyEmailChange,
+  verifyUser,
 };

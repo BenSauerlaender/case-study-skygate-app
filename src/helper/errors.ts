@@ -25,6 +25,17 @@ export class InvalidSearchError extends ApiError {
 }
 
 /**
+ * Will be thrown if a verification is already done
+ */
+export class AlreadyVerifiedError extends ApiError {
+  constructor(msg: string = "") {
+    super(msg);
+
+    // Set the prototype explicitly.
+    Object.setPrototypeOf(this, AlreadyVerifiedError.prototype);
+  }
+}
+/**
  * Will be thrown if specified user cant be found
  */
 export class NoUserError extends ApiError {

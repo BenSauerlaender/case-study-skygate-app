@@ -7,7 +7,8 @@ import NotFound from "../views/StaticNotFoundView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import SearchView from "../views/SearchUsersView.vue";
 import UserView from "../views/UserView.vue";
-import EmailChangedView from "../views/StaticEmailChangedView.vue";
+import VerifyEmailChangeView from "../views/VerifyEmailChangeView.vue";
+import UserVerificationView from "../views/UserVerificationView.vue";
 import { useStore } from "@/stores/store";
 
 const router = createRouter({
@@ -42,9 +43,12 @@ const router = createRouter({
       component: TermsOfUseView,
     },
     {
-      //show simple message after the email was changed successful
-      path: "/email-changed",
-      component: EmailChangedView,
+      path: "/verify-user",
+      component: UserVerificationView,
+    },
+    {
+      path: "/change-email",
+      component: VerifyEmailChangeView,
     },
     {
       path: "/search",
