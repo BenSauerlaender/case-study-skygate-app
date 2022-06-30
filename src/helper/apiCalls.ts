@@ -74,6 +74,36 @@ async function updateUsersEmail(
     .catch(handleError);
 }
 
+//updates a users role
+async function updateUsersRole(
+  userID: number,
+  role: string,
+  token: string
+): Promise<void> {
+  await axios
+    .put(
+      API_URL + `/users/${userID}/role`,
+      { role: role },
+      withAccessToken(token)
+    )
+    .catch(handleError);
+}
+
+//updates a users email address without need to verify it
+async function updateUsersEmailPrivileged(
+  userID: number,
+  email: string,
+  token: string
+): Promise<void> {
+  await axios
+    .post(
+      API_URL + `/users/${userID}/email-change-privileged`,
+      { email: email },
+      withAccessToken(token)
+    )
+    .catch(handleError);
+}
+
 //updates a users password
 async function updateUsersPassword(
   userID: number,
@@ -85,6 +115,21 @@ async function updateUsersPassword(
     .put(
       API_URL + `/users/${userID}/password`,
       { oldPassword: oldPassword, newPassword: newPassword },
+      withAccessToken(token)
+    )
+    .catch(handleError);
+}
+
+//updates a users password without need for the old
+async function updateUsersPasswordPrivileged(
+  userID: number,
+  newPassword: string,
+  token: string
+): Promise<void> {
+  await axios
+    .put(
+      API_URL + `/users/${userID}/password-privileged-change`,
+      { newPassword: newPassword },
       withAccessToken(token)
     )
     .catch(handleError);
@@ -153,6 +198,14 @@ async function verifyUser(userID: number, code: number): Promise<void> {
     .catch(handleError);
 }
 
+//Get all available roles
+async function getRoles(token: string): Promise<string[]> {
+  const response = await axios
+    .get(API_URL + `/role`, withAccessToken(token))
+    .catch(handleError);
+  return response.data;
+}
+
 //wraps the accessToken in an axios config object
 const withAccessToken = (token: string) => {
   if (token === "") throw new UserNotLoggedInError();
@@ -192,11 +245,15 @@ export const api = {
   logoutUser,
   getUser,
   updateUsersContactData,
+  updateUsersRole,
   updateUsersEmail,
+  updateUsersEmailPrivileged,
   updateUsersPassword,
+  updateUsersPasswordPrivileged,
   getSearchLength,
   getSearchResults,
   deleteUser,
   verifyEmailChange,
   verifyUser,
+  getRoles,
 };
