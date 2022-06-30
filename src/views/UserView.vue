@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useStore } from "@/stores/store";
 import { NoUserError } from "@/helper/errors";
-import { storeToRefs } from "pinia";
 import { computed, ref, watchEffect, type Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import User from "../components/User.vue";
@@ -12,8 +11,6 @@ const store = useStore();
 const route = useRoute();
 const router = useRouter();
 const user: Ref<null | PublicUser> = ref(null);
-
-const { isAdmin } = storeToRefs(store);
 
 //get the user id as number from the url
 const requestedUserID = computed(() =>
@@ -53,11 +50,6 @@ watchEffect(async () => {
 <template>
   <h1 class="heading">{{ $t("sites.user.name") }}</h1>
   <br />
-  <User
-    v-if="user"
-    :user="user"
-    :editable="isAdmin ?? false"
-    @user-changed="fetchUser"
-  />
+  <User v-if="user" :user="user" @user-changed="fetchUser" />
 </template>
 <style scoped></style>

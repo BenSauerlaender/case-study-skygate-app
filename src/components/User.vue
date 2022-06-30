@@ -3,15 +3,58 @@ import UserDataView from "./UserDataView.vue";
 import ContactDataChange from "./UserContactDataChange.vue";
 import PasswordChange from "./UserPasswordChange.vue";
 import EmailChange from "./UserEmailChange.vue";
+import RoleChange from "./UserRoleChange.vue";
 import DeleteUser from "./UserDelete.vue";
 import { toRefs } from "vue";
 import type { PublicUser } from "@/helper/types";
+import { useStore } from "@/stores/store";
+import { computed } from "@vue/reactivity";
 
 const props = defineProps<{
   user: PublicUser; //The user to show
-  editable: boolean; //activates ContactData-/Email/Password-change and delete
 }>();
-const { user, editable } = toRefs(props);
+const { user } = toRefs(props);
+
+const store = useStore();
+
+//is the user to display the same as the logged in?
+const isSelf = computed(() => store.accessTokenPayload?.id === user.value.id);
+
+const showContactDataChange = computed(
+  () =>
+    (isSelf.value && store.hasPermission("changeOwnContactData")) ||
+    store.hasPermission("changeAllUsersContactData")
+);
+
+const showPrivilegedEmailChange = computed(() =>
+  store.hasPermission("changeAllUsersEmailPrivileged")
+);
+
+const showPrivilegedPasswordChange = computed(() =>
+  store.hasPermission("changeAllUsersPasswordsPrivileged")
+);
+
+const showEmailChange = computed(
+  () =>
+    (isSelf.value && store.hasPermission("changeOwnEmail")) ||
+    showPrivilegedEmailChange.value
+);
+
+const showPasswordChange = computed(
+  () =>
+    (isSelf.value && store.hasPermission("changeOwnPassword")) ||
+    showPrivilegedPasswordChange.value
+);
+
+const showDelete = computed(
+  () =>
+    (isSelf.value && store.hasPermission("deleteSelf")) ||
+    store.hasPermission("deleteAllUsers")
+);
+
+const showRoleChange = computed(() =>
+  store.hasPermission("changeAllUsersRoles")
+);
 
 const emit = defineEmits<{
   (e: "userChanged"): void; //Tell the parent that this component has changed the user data
@@ -26,29 +69,49 @@ const emit = defineEmits<{
   </div>
   <br />
 
-  <!-- Edit user data -->
-  <template v-if="editable">
-    <!-- Edit user contact data -->
+  <!-- Edit user contact data -->
+  <template v-if="showContactDataChange">
     <h1>{{ $t("components.userShowcase.headers.changeContactData") }}</h1>
     <div class="section">
       <ContactDataChange :user="user" @userChanged="emit('userChanged')" />
     </div>
     <br />
+  </template>
 
-    <!-- Request a email change -->
+  <!-- Request a email change -->
+  <template v-if="showEmailChange">
     <h1>{{ $t("components.userShowcase.headers.changeEmail") }}</h1>
     <div class="section">
-      <EmailChange :userID="user.id" :oldEmail="user.email" />
+      <EmailChange :userID="user.id" :privileged="showPrivilegedEmailChange" />
     </div>
     <br />
+  </template>
 
-    <!-- Change users password -->
+  <!-- Change users password -->
+  <template v-if="showPasswordChange">
     <h1>{{ $t("components.userShowcase.headers.changePassword") }}</h1>
     <div class="section">
-      <PasswordChange :userID="user.id" />
+      <PasswordChange
+        :userID="user.id"
+        :privileged="showPrivilegedPasswordChange"
+      />
     </div>
+  </template>
 
-    <!-- Edit user data -->
+  <!-- Change users role -->
+  <template v-if="showRoleChange">
+    <h1>{{ $t("components.userShowcase.headers.changeRole") }}</h1>
+    <div class="section">
+      <RoleChange
+        :userID="user.id"
+        :currentRole="user.role"
+        @userChanged="emit('userChanged')"
+      />
+    </div>
+  </template>
+
+  <!-- delete user -->
+  <template v-if="showDelete">
     <h1>{{ $t("components.userShowcase.headers.deleteUser") }}</h1>
     <div class="section">
       <DeleteUser :userID="user.id" @userChanged="emit('userChanged')" />

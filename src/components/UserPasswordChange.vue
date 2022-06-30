@@ -7,6 +7,7 @@ import InputForm from "./BaseInputForm.vue";
 
 const props = defineProps<{
   userID: number;
+  privileged: boolean;
 }>();
 
 const router = useRouter();

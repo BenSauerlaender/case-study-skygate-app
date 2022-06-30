@@ -21,14 +21,5 @@ const changeEmail = (inputs: Partial<FormInputs>) =>
 </script>
 
 <!-- Component to request a users email change-->
-<template>
-  <InputForm
-    :defaultFields="{
-      email: '',
-    }"
-    :requiredFields="['email']"
-    submitButtonText="components.emailChange.buttons.change"
-    :submitFunction="changeEmail"
-  />
-</template>
+<template></template>
 <style scoped></style>

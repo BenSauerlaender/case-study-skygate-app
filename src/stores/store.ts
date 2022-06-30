@@ -111,15 +111,8 @@ export const useStore = defineStore({
       this.loggedInUser = null;
     },
 
-    async updateUsersRole(
-      id: number,
-      role: string
-    ): Promise<void> {
-      await api.updateUsersRole(
-        id,
-        role,
-        this.accessToken
-      );
+    async updateUsersRole(id: number, role: string): Promise<void> {
+      await api.updateUsersRole(id, role, this.accessToken);
     },
 
     async updateUsersEmail(id: number, email: string): Promise<void> {
@@ -205,11 +198,10 @@ export const useStore = defineStore({
       await api.verifyUser(queryValueToInt(id), queryValueToInt(code));
     },
 
-//Get all available roles
-async getRoles(): Promise<string[]> {
-  return api.getRoles(this.accessToken):
-}
-
+    //Get all available roles
+    async getRoles(): Promise<string[]> {
+      return api.getRoles(this.accessToken);
+    },
   },
 });
 

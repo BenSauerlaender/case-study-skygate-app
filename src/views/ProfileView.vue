@@ -18,12 +18,7 @@ if (user.value === null) {
 <template>
   <h1 class="heading">{{ $t("sites.profile.name") }}</h1>
   <br />
-  <User
-    v-if="user"
-    :user="user"
-    :editable="true"
-    @user-changed="store.fetchUser"
-  />
+  <User v-if="user" :user="user" @user-changed="store.fetchUser" />
   <br />
   <br />
   <button @click="store.logoutUser">

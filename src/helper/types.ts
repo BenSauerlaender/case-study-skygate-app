@@ -18,7 +18,9 @@ export type Email = { email: string };
 
 export type Password = { password: string };
 
-export type PublicUser = ContactData & ID & Email;
+export type Role = { role: string };
+
+export type PublicUser = ContactData & ID & Email & Role;
 
 export type PrivateUser = PublicUser & Password;
 
