@@ -23,12 +23,6 @@ export const useStore = defineStore({
     loggedIn(): boolean {
       return this.accessToken !== "";
     },
-    //check if user has admin permissions
-    isAdmin(): boolean {
-      return (
-        this.accessTokenPayload?.perm.includes("user:{all}:{all}") ?? false
-      );
-    },
     //get the accessToken jwt-payload (userID (id), seconds until expiration (exp), users permissions (perm))
     accessTokenPayload():
       | { id: number; exp: number; perm: string }
@@ -39,6 +33,11 @@ export const useStore = defineStore({
     },
   },
   actions: {
+    //check if user has a specific permissions
+    hasPermission(perm: string): boolean {
+      return this.accessTokenPayload?.perm.includes(perm) ?? false;
+    },
+
     async registerUser(props: PrivateUser): Promise<void> {
       //filter out all other (not needed keys)
       return await api.sendRegistration(
@@ -112,8 +111,23 @@ export const useStore = defineStore({
       this.loggedInUser = null;
     },
 
+    async updateUsersRole(
+      id: number,
+      role: string
+    ): Promise<void> {
+      await api.updateUsersRole(
+        id,
+        role,
+        this.accessToken
+      );
+    },
+
     async updateUsersEmail(id: number, email: string): Promise<void> {
       await api.updateUsersEmail(id, email, this.accessToken);
+    },
+
+    async updateUsersEmailPrivileged(id: number, email: string): Promise<void> {
+      await api.updateUsersEmailPrivileged(id, email, this.accessToken);
     },
 
     async updateUsersPassword(
@@ -129,6 +143,17 @@ export const useStore = defineStore({
       );
     },
 
+    async updateUsersPasswordPrivileged(
+      id: number,
+      newPassword: string
+    ): Promise<void> {
+      await api.updateUsersPasswordPrivileged(
+        id,
+        newPassword,
+        this.accessToken
+      );
+    },
+
     async updateUserContactData(
       id: number,
       data: Partial<ContactData>
@@ -137,14 +162,14 @@ export const useStore = defineStore({
     },
 
     async getUser(id: number): Promise<PublicUser> {
-      return await api.getUser(id, this.accessToken);
+      return api.getUser(id, this.accessToken);
     },
 
     async getSearchLength(query: SearchQuery): Promise<number> {
-      return await api.getSearchLength(query, this.accessToken!);
+      return api.getSearchLength(query, this.accessToken!);
     },
     async getSearchResults(query: SearchQuery): Promise<Array<PublicUser>> {
-      return await api.getSearchResults(query, this.accessToken!);
+      return api.getSearchResults(query, this.accessToken!);
     },
 
     //delete a user, if its the logged in user -> log out.
@@ -168,7 +193,6 @@ export const useStore = defineStore({
       await api.verifyEmailChange(userID, queryValueToInt(code));
       //if the user whose email was changed is currently logged in -> log hin out (bc they refreshToken is now invalid anyways)
       if (this.accessTokenPayload?.id === userID) {
-        console.log(userID);
         await this.logoutUser();
       }
     },
@@ -180,6 +204,12 @@ export const useStore = defineStore({
     ): Promise<void> {
       await api.verifyUser(queryValueToInt(id), queryValueToInt(code));
     },
+
+//Get all available roles
+async getRoles(): Promise<string[]> {
+  return api.getRoles(this.accessToken):
+}
+
   },
 });
 
