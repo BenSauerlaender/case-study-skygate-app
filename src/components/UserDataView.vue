@@ -12,7 +12,9 @@ const { user } = toRefs(props);
   <div v-for="(value, key) in user">
     <!-- Filter out all unwanted keys -->
     <template
-      v-if="['name', 'postcode', 'city', , 'phone', 'email'].includes(key)"
+      v-if="
+        ['name', 'postcode', 'city', , 'phone', 'email', 'role'].includes(key)
+      "
     >
       <h2>{{ $t(`userProps.${key}.long`) }}:</h2>
       {{ value }}
