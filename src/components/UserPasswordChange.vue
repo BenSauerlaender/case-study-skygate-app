@@ -8,6 +8,9 @@ const props = defineProps<{
   userID: number;
   privileged: boolean;
 }>();
+defineEmits<{
+  (e: "userChanged"): void;
+}>();
 
 const store = useStore();
 const { t } = useI18n();
