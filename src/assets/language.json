@@ -43,6 +43,7 @@
                     "search": "suchen"
                 },
                 "messages": {
+                    "noPermission": "Du hast nicht die noetigen Berechtigungen, um nach anderen Nutzern zu suchen.",
                     "invalidSearch": "Die Suche ist ungültig und kann nicht aufgeführt werden.",
                     "sort": "Sortieren nach",
                     "sorting": {
