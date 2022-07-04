@@ -82,7 +82,11 @@ const emit = defineEmits<{
   <template v-if="showEmailChange">
     <h1>{{ $t("components.userShowcase.headers.changeEmail") }}</h1>
     <div class="section">
-      <EmailChange :userID="user.id" :privileged="showPrivilegedEmailChange" />
+      <EmailChange
+        :userID="user.id"
+        :privileged="showPrivilegedEmailChange"
+        @userChanged="emit('userChanged')"
+      />
     </div>
     <br />
   </template>
@@ -94,6 +98,7 @@ const emit = defineEmits<{
       <PasswordChange
         :userID="user.id"
         :privileged="showPrivilegedPasswordChange"
+        @userChanged="emit('userChanged')"
       />
     </div>
   </template>

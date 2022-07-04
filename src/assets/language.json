@@ -121,7 +121,8 @@
                     "change": "ändern"
                 },
                 "messages": {
-                    "successful": "Bitte klicke auf den Link, der an die @:{'userProps.email.short'}: {email} gesendet wurde, um die änderung zu bestätigen."
+                    "successful": "Bitte klicke auf den Link, der an die @:{'userProps.email.short'}: {email} gesendet wurde, um die änderung zu bestätigen.",
+                    "successfulPrivileged": "Die @:{'userProps.email.long'} wurde erfolgreich geändert."
                 }
             },
             "passwordChange": {

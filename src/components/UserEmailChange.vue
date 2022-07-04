@@ -8,6 +8,9 @@ const props = defineProps<{
   userID: number;
   privileged: boolean;
 }>();
+const emit = defineEmits<{
+  (e: "userChanged"): void;
+}>();
 
 const { t } = useI18n();
 const store = useStore();
@@ -17,6 +20,12 @@ const changeEmail = (inputs: Partial<FormInputs>) =>
     return t("components.emailChange.messages.successful", {
       email: inputs.email!,
     });
+  });
+
+const changeEmailPrivileged = (inputs: Partial<FormInputs>) =>
+  store.updateUsersEmailPrivileged(props.userID, inputs.email!).then(() => {
+    emit("userChanged");
+    return t("components.emailChange.messages.successfulPrivileged");
   });
 </script>
 
@@ -28,7 +37,7 @@ const changeEmail = (inputs: Partial<FormInputs>) =>
     }"
     :requiredFields="['email']"
     submitButtonText="components.emailChange.buttons.change"
-    :submitFunction="changeEmail"
+    :submitFunction="privileged ? changeEmailPrivileged : changeEmail"
   />
 </template>
 <style scoped></style>
