@@ -101,6 +101,7 @@ const emit = defineEmits<{
         @userChanged="emit('userChanged')"
       />
     </div>
+    <br />
   </template>
 
   <!-- Change users role -->
@@ -113,6 +114,7 @@ const emit = defineEmits<{
         @userChanged="emit('userChanged')"
       />
     </div>
+    <br />
   </template>
 
   <!-- delete user -->

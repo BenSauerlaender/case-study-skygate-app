@@ -201,7 +201,7 @@ async function verifyUser(userID: number, code: number): Promise<void> {
 //Get all available roles
 async function getRoles(token: string): Promise<string[]> {
   const response = await axios
-    .get(API_URL + `/role`, withAccessToken(token))
+    .get(API_URL + `/roles`, withAccessToken(token))
     .catch(handleError);
   return response.data;
 }

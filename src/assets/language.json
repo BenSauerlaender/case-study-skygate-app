@@ -92,6 +92,7 @@
                     "changeContactData": "Kontaktdaten ändern",
                     "changeEmail": "@:{'userProps.email.long'} ändern",
                     "deleteUser": "User löschen",
+                    "changeRole": "@:{'userProps.role.long'} ändern",
                     "changePassword": "@:{'userProps.password.long'} ändern"
                 }
             },
@@ -132,6 +133,15 @@
                 "messages": {
                     "successful": "Das @:{'userProps.password.short'} wurde erfolgreich geändert."
                 }
+            },
+            "roleChange": {
+                "buttons": {
+                    "change": "ändern"
+                },
+                "messages": {
+                    "successful": "Die @:{'userProps.role.long'} wurde erfolgreich geändert."
+                },
+                "label": "Neue @:{'userProps.role.short'}:"
             }
         },
         "userProps": {
