@@ -2,7 +2,6 @@
 import type { FormInputs } from "@/helper/types";
 import { useStore } from "@/stores/store";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
 import InputForm from "./BaseInputForm.vue";
 
 const props = defineProps<{
@@ -10,13 +9,19 @@ const props = defineProps<{
   privileged: boolean;
 }>();
 
-const router = useRouter();
 const store = useStore();
 const { t } = useI18n();
 
 const changePassword = (inputs: Partial<FormInputs>) =>
   store
     .updateUsersPassword(props.userID, inputs.oldPassword!, inputs.password!)
+    .then(() => {
+      return t("components.passwordChange.messages.successful");
+    });
+
+const changePasswordPrivileged = (inputs: Partial<FormInputs>) =>
+  store
+    .updateUsersPasswordPrivileged(props.userID, inputs.password!)
     .then(() => {
       return t("components.passwordChange.messages.successful");
     });
@@ -34,6 +39,18 @@ const hasChanged = () => {
 <!-- Component to change a users password-->
 <template>
   <InputForm
+    v-if="privileged"
+    :defaultFields="{
+      password: '',
+      passwordRepeat: '',
+    }"
+    :requiredFields="['password', 'passwordRepeat']"
+    submitButtonText="components.passwordChange.buttons.change"
+    :submitFunction="changePasswordPrivileged"
+    @submitSuccessful="hasChanged"
+  />
+  <InputForm
+    v-else
     :defaultFields="{
       oldPassword: '',
       password: '',
