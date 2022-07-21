@@ -122,7 +122,7 @@ const onGetInputs = (inputs: FormInputs) => {
           //add the invalid fields to the validationErrorMessageMap
           err.invalidProps.forEach((value, key) => {
             // if its email is taken: the message is more verbose
-            if (key === "email" && value[0] === "IS_TAKEN") {
+            if (key === "email" && value["msg"] == "Email is taken") {
               validationErrorMessageMap.value.set("email", [
                 "validationErrorMessages.isTaken",
               ]);

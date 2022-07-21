@@ -75,7 +75,7 @@ export class UserNotLoggedInError extends ApiError {
  * will be thrown if specified properties are invalid
  */
 export class InvalidPropsError extends ApiError {
-  invalidProps: Map<keyof FormInputs, string[]> = new Map();
+  invalidProps: Map<keyof FormInputs, any> = new Map();
   constructor(
     msg: string = "",
     props: { [index: string]: Array<string> } = {}

@@ -20,7 +20,7 @@ import type {
  */
 
 //The Base URL, where the backend is reachable
-const API_URL = "http://localhost:3000/api/v1";
+const API_URL = "http://localhost:8000/api/v2";
 
 //registers a new user
 async function sendRegistration(props: PrivateUser): Promise<void> {
@@ -156,9 +156,7 @@ async function getSearchResults(
 ): Promise<Array<PublicUser>> {
   //need to change null to '' because axios cant send null.
   const fixedQuery: any = { ...query };
-  if (query.DESC === null) {
-    fixedQuery.DESC = "";
-  }
+  fixedQuery.order = query.DESC === null ? "DESC" : "ASC";
 
   const response = await axios
     .get(API_URL + `/users`, {
